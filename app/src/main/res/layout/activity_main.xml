@@ -9,8 +9,58 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/enable_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="enable/disable" />
+
+        <Button
+            android:id="@+id/change_text_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="change text" />
+
+        <Button
+            android:id="@+id/change_background_color_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="background" />
+
+        <Button
+            android:id="@+id/text_color_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="text color" />
+
+        <Button
+            android:id="@+id/shape_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="shape" />
+
+        <Button
+            android:id="@+id/elevation_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="elevation" />
+
+    </LinearLayout>
+
     <pl.sigmapoint.customview.CustomButton
-        android:id="@+id/dialog_button"
+        android:id="@+id/button"
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"

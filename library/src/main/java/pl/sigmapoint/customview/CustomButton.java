@@ -23,19 +23,22 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
     protected TextView textView;
     protected FrameLayout container;
 
+    private int backgroundPressed, backgroundDisabled, background;
+    private ColorStateList backgroundState;
+    private int textColorPressed, textColorDisabled, textColor;
+    private ColorStateList textColorState;
+    private float textSize;
+    private String text;
+    private float shapeRadius;
+    private int shapeTypeAttr;
+    private int strokeColorPressed, strokeColorDisabled, strokeColor;
+    private float strokeSize;
+    private boolean isElevationEnabled;
+
+    private int shapeType;
+
     public CustomButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        int backgroundPressed, backgroundDisabled, background;
-        int textColorPressed, textColorDisabled, textColor;
-        ColorStateList textColorState;
-        float textSize;
-        String text;
-        float shapeRadius;
-        int shapeType;
-        int strokeColorPressed, strokeColorDisabled, strokeColor;
-        float strokeSize;
-        boolean isElevationEnabled;
 
         TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomButton, 0, 0);
 
@@ -43,6 +46,7 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
             background = attributes.getColor(R.styleable.CustomButton_bc_background, 0);
             backgroundPressed = attributes.getColor(R.styleable.CustomButton_bc_background_pressed, background);
             backgroundDisabled = attributes.getColor(R.styleable.CustomButton_bc_background_disabled, background);
+            backgroundState = attributes.getColorStateList(R.styleable.CustomButton_bc_background_state_list);
 
             textColor = attributes.getColor(R.styleable.CustomButton_bc_text_color, 0);
             textColorPressed = attributes.getColor(R.styleable.CustomButton_bc_text_color_pressed, textColor);
@@ -52,13 +56,17 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
             text = attributes.getString(R.styleable.CustomButton_android_text);
 
             shapeRadius = attributes.getDimension(R.styleable.CustomButton_bc_shape_radius, 0);
-            shapeType = attributes.getInt(R.styleable.CustomButton_bc_shape_type, 0);
+            shapeTypeAttr = attributes.getInt(R.styleable.CustomButton_bc_shape_type, 0);
             strokeColor = attributes.getColor(R.styleable.CustomButton_bc_stroke_color, Color.DKGRAY);
             strokeColorPressed = attributes.getColor(R.styleable.CustomButton_bc_stroke_color_pressed, strokeColor);
             strokeColorDisabled = attributes.getColor(R.styleable.CustomButton_bc_stroke_color_disabled, strokeColor);
             strokeSize = attributes.getDimension(R.styleable.CustomButton_bc_stroke_size, 0);
 
             isElevationEnabled = attributes.getBoolean(R.styleable.CustomButton_bc_elevation_enabled, true);
+
+            if (backgroundState != null) {
+                backgroundColorStateListToIntegers(backgroundState);
+            }
 
             inflate(context, R.layout.button_custom, this);
 
@@ -73,54 +81,11 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
             if (textColor != 0) textView.setTextColor(textColorList);
             else if (textColorState != null) textView.setTextColor(textColorState);
 
-            int shapeTypeDecision = (shapeType == 0) ? GradientDrawable.RECTANGLE : GradientDrawable.OVAL;
+            shapeType = (shapeTypeAttr == 0) ? GradientDrawable.RECTANGLE : GradientDrawable.OVAL;
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            setShape();
+            setElevationEnabled(isElevationEnabled);
 
-                StateListDrawable stateListDrawable = new StateListDrawable();
-                GradientDrawable drawableNormal = new GradientDrawable();
-                GradientDrawable drawablePressed;
-                GradientDrawable drawableDisabled;
-
-                drawableNormal.setShape(shapeTypeDecision);
-                drawableNormal.setCornerRadius(shapeRadius);
-
-                drawablePressed = (GradientDrawable) drawableNormal.getConstantState().newDrawable().mutate();
-                drawableDisabled = (GradientDrawable) drawableNormal.getConstantState().newDrawable().mutate();
-
-                drawableNormal.setColor(background);
-                drawablePressed.setColor(backgroundPressed);
-                drawableDisabled.setColor(backgroundDisabled);
-                drawableNormal.setStroke((int) strokeSize, strokeColor);
-                drawablePressed.setStroke((int) strokeSize, strokeColorPressed);
-                drawableDisabled.setStroke((int) strokeSize, strokeColorDisabled);
-
-                stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
-                stateListDrawable.addState(new int[]{android.R.attr.state_enabled}, drawableNormal);
-                stateListDrawable.addState(new int[]{}, drawableDisabled);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                    container.setBackground(stateListDrawable);
-                else container.setBackgroundDrawable(stateListDrawable);
-            } else {
-                GradientDrawable gd = new GradientDrawable();
-                gd.setShape(shapeTypeDecision);
-                gd.setCornerRadius(shapeRadius);
-                gd.setColor(background);
-                gd.setStroke((int) strokeSize, strokeColor);
-
-                RippleDrawable drawable = new RippleDrawable(new ColorStateList(new int[][]{new int[]{}}, new int[]{backgroundPressed}), gd, null);
-
-                container.setBackground(drawable);
-                container.setStateListAnimator(AnimatorInflater.loadStateListAnimator(context, R.anim.elevation_button_custom));
-                if (isElevationEnabled) {
-                    FrameLayout.LayoutParams layoutParams = (LayoutParams) container.getLayoutParams();
-                    layoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics());
-                    layoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics());
-                    layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics());
-                    layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics());
-                    container.setLayoutParams(layoutParams);
-                }
-            }
         } finally {
             attributes.recycle();
         }
@@ -138,5 +103,116 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
         super.setEnabled(enabled);
         textView.setEnabled(enabled);
         container.setEnabled(enabled);
+    }
+
+    private void setShape() {
+
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        GradientDrawable gd = new GradientDrawable();
+        gd.setShape(shapeType);
+        gd.setCornerRadius(shapeRadius);
+
+        GradientDrawable drawableNormal = (GradientDrawable) gd.getConstantState().newDrawable().mutate();
+        GradientDrawable drawablePressed = (GradientDrawable) gd.getConstantState().newDrawable().mutate();
+        GradientDrawable drawableDisabled = (GradientDrawable) gd.getConstantState().newDrawable().mutate();
+
+        drawableNormal.setColor(background);
+        drawablePressed.setColor(backgroundPressed);
+        drawableDisabled.setColor(backgroundDisabled);
+        drawableNormal.setStroke((int) strokeSize, strokeColor);
+        drawablePressed.setStroke((int) strokeSize, strokeColorPressed);
+        drawableDisabled.setStroke((int) strokeSize, strokeColorDisabled);
+
+        stateListDrawable.addState(new int[]{android.R.attr.state_enabled}, drawableNormal);
+        stateListDrawable.addState(new int[]{}, drawableDisabled);
+
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+
+            stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                container.setBackground(stateListDrawable);
+            else
+                container.setBackgroundDrawable(stateListDrawable);
+
+        } else {
+
+            RippleDrawable drawable = new RippleDrawable(new ColorStateList(new int[][]{new int[]{}}, new int[]{backgroundPressed}), stateListDrawable, null);
+            container.setBackground(drawable);
+        }
+    }
+
+    private void backgroundColorStateListToIntegers(ColorStateList colorStateList) {
+
+        int globalColor = colorStateList.getColorForState(new int[]{}, 0);
+
+        background = colorStateList.getColorForState(new int[]{android.R.attr.state_enabled}, globalColor);
+        backgroundPressed = colorStateList.getColorForState(new int[]{android.R.attr.state_pressed}, globalColor);
+        backgroundDisabled = globalColor;
+    }
+
+    public void setShape(int shapeType, int shapeRadius) {
+        this.shapeType = shapeType;
+        this.shapeRadius = shapeRadius;
+        setShape();
+
+    }
+
+    public void setTextColor(int color) {
+        textView.setTextColor(color);
+    }
+
+    public void setTextColor(ColorStateList colorStateList) {
+        textView.setTextColor(colorStateList);
+    }
+
+    public void setText(String text) {
+        textView.setText(text);
+    }
+
+    public void setElevationEnabled(boolean enabled) {
+
+        isElevationEnabled = enabled;
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+
+            int var;
+
+            if (enabled) {
+                var = 6;
+                container.setStateListAnimator(AnimatorInflater.loadStateListAnimator(getContext(), R.anim.elevation_button_custom));
+            } else {
+                var = 0;
+                container.setTranslationZ(0);
+                container.setElevation(0);
+                container.setStateListAnimator(null);
+            }
+            FrameLayout.LayoutParams layoutParams = (LayoutParams) container.getLayoutParams();
+            layoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
+            layoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
+            layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
+            layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
+            container.setLayoutParams(layoutParams);
+
+        }
+    }
+
+    public void setBackgroundColor(ColorStateList colorStateList) {
+
+        backgroundColorStateListToIntegers(colorStateList);
+        setShape();
+    }
+
+    public int getShapeType() {
+        return shapeType;
+    }
+
+    public String getText() {
+        return String.valueOf(textView.getText());
+    }
+
+    public boolean isElevationEnabled() {
+        return isElevationEnabled;
     }
 }
