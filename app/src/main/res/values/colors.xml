@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red_light">#EF9A9A</color>
+    <color name="red_normal">#F44336</color>
+    <color name="red_dark">#C62828</color>
+
+    <color name="blue_light">#90CAF9</color>
+    <color name="blue_normal">#2196F3</color>
+    <color name="blue_dark">#1565C0</color>
+
+    <color name="orange_light">#FFCC80</color>
+    <color name="orange_normal">#FF9800</color>
+    <color name="orange_dark">#EF6C00</color>
+</resources>
