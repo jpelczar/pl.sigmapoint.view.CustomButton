@@ -67,4 +67,4 @@ setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, Cust
 setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, int[] padding) <br>
 setImage(int position, Drawable drawable, int[] padding) <br>
 setElevationEnabled(boolean enabled) <br>
-and evry HTML tag have getter <br>
+and evry XML tag have getter <br>
