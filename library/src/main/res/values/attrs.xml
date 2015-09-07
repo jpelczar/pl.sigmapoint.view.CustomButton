@@ -13,6 +13,11 @@
         <attr name="cb_text_size" format="dimension" />
         <attr name="android:text" />
         <attr name="android:textColor" />
+        <attr name="cb_text_padding" format="dimension" />
+        <attr name="cb_text_padding_left" format="dimension" />
+        <attr name="cb_text_padding_top" format="dimension" />
+        <attr name="cb_text_padding_right" format="dimension" />
+        <attr name="cb_text_padding_bottom" format="dimension" />
 
         <attr name="cb_shape_radius" format="dimension" />
         <attr name="cb_shape_type" format="integer">
@@ -26,5 +31,22 @@
         <attr name="cb_frame_state_list" format="color" />
 
         <attr name="cb_elevation_enabled" format="boolean" />
+
+        <attr name="cb_image_position" format="integer">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+            <enum name="right" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+        <attr name="cb_image" format="reference" />
+        <attr name="cb_image_normal" format="reference" />
+        <attr name="cb_image_disabled" format="reference" />
+        <attr name="cb_image_pressed" format="reference" />
+        <attr name="cb_image_padding" format="dimension" />
+        <attr name="cb_image_padding_left" format="dimension" />
+        <attr name="cb_image_padding_top" format="dimension" />
+        <attr name="cb_image_padding_right" format="dimension" />
+        <attr name="cb_image_padding_bottom" format="dimension" />
+
     </declare-styleable>
 </resources>

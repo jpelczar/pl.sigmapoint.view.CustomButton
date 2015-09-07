@@ -4,23 +4,35 @@ import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * Created by jpelczar on 02.09.2015.
  */
-public class CustomButton extends FrameLayout implements View.OnClickListener {
+public class CustomButton extends LinearLayout implements View.OnClickListener {
+
+    public static int LEFT = 0;
+    public static int TOP = 1;
+    public static int RIGHT = 2;
+    public static int BOTTOM = 3;
 
     protected TextView textView; //text container
-    protected FrameLayout container; //all content container
+    protected LinearLayout container; //all content container
+    protected RelativeLayout relativeContainer;
+    protected ImageView imageContainer;
 
     private int backgroundPressed, backgroundDisabled, backgroundColor; // colors for each backgroundColor state
     private ColorStateList backgroundColorState; // color state list for backgroundColor
@@ -28,20 +40,30 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
     private ColorStateList textColorState; // color state list for text
     private float textSize; // text size
     private String text; // text inside button
+    private int textPadding;
+    private int[] textPaddingArray;
     private float shapeRadius; // corner radius
     private int shapeTypeAttr; // shape type (from xml - converted  to shape type constants)
     private int frameColorPressed, frameColorDisabled, frameColor; // colors for each frame color state
     private ColorStateList frameColorState;
     private float frameSize; // frame size
     private boolean isElevationEnabled; // is elevation should be displayed >=API 21
+    private Drawable drawable, drawableNormal, drawableDisabled, drawablePressed;
+    private int drawablePosition;
+    private int imagePadding;
+    private int[] imagePaddingArray;
+
 
     private int shapeType; // converted shape type from shapeTypeAttr
 
-    //TODO add methods for stroke - add attr
+    //TODO stosunek podziału image / text
+    //TODO scaletype of image
 
     public CustomButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        textPaddingArray = new int[4];
+        imagePaddingArray = new int[4];
         TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomButton, 0, 0);
 
         try {
@@ -56,6 +78,11 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
             textColorState = attributes.getColorStateList(R.styleable.CustomButton_android_textColor);
             textSize = attributes.getDimension(R.styleable.CustomButton_cb_text_size, 0);
             text = attributes.getString(R.styleable.CustomButton_android_text);
+            textPadding = (int) attributes.getDimension(R.styleable.CustomButton_cb_text_padding, 0);
+            textPaddingArray[LEFT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_text_padding_left, textPadding);
+            textPaddingArray[TOP] = (int) attributes.getDimension(R.styleable.CustomButton_cb_text_padding_top, textPadding);
+            textPaddingArray[RIGHT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_text_padding_right, textPadding);
+            textPaddingArray[BOTTOM] = (int) attributes.getDimension(R.styleable.CustomButton_cb_text_padding_bottom, textPadding);
 
             shapeRadius = attributes.getDimension(R.styleable.CustomButton_cb_shape_radius, 0);
             shapeTypeAttr = attributes.getInt(R.styleable.CustomButton_cb_shape_type, 0);
@@ -67,6 +94,18 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
 
             isElevationEnabled = attributes.getBoolean(R.styleable.CustomButton_cb_elevation_enabled, true);
 
+            drawablePosition = attributes.getInteger(R.styleable.CustomButton_cb_image_position, -1);
+            drawable = attributes.getDrawable(R.styleable.CustomButton_cb_image);
+            drawableNormal = attributes.getDrawable(R.styleable.CustomButton_cb_image_normal);
+            drawablePressed = attributes.getDrawable(R.styleable.CustomButton_cb_image_pressed);
+            drawableDisabled = attributes.getDrawable(R.styleable.CustomButton_cb_image_disabled);
+            imagePadding = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding, 0);
+            imagePaddingArray[LEFT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_left, imagePadding);
+            imagePaddingArray[TOP] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_top, imagePadding);
+            imagePaddingArray[RIGHT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_right, imagePadding);
+            imagePaddingArray[BOTTOM] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_bottom, imagePadding);
+
+
             if (backgroundColorState != null) { // if backgroundColor state is not null the set color from color state list to specific colors
                 backgroundColorStateListToIntegers(backgroundColorState);
             }
@@ -75,18 +114,7 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
                 frameColorStateListToIntegers(frameColorState);
             }
 
-            inflate(context, R.layout.button_custom, this);
-
-            textView = (TextView) findViewById(R.id.text);
-            container = (FrameLayout) findViewById(R.id.container);
-
-            ColorStateList textColorList = new ColorStateList(new int[][]{new int[]{android.R.attr.state_pressed}, new int[]{android.R.attr.state_enabled}, new int[]{}},
-                    new int[]{textColorPressed, textColor, textColorDisabled});
-
-            textView.setText(text);
-            if (textSize > 0) textView.setTextSize(textSize);
-            if (textColor != 0) textView.setTextColor(textColorList);
-            else if (textColorState != null) textView.setTextColor(textColorState);
+            setContent(context);
 
             shapeType = (shapeTypeAttr == 0) ? GradientDrawable.RECTANGLE : GradientDrawable.OVAL; // convert xml attributes value to shape type constant
 
@@ -110,6 +138,77 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
         super.setEnabled(enabled);
         textView.setEnabled(enabled); //chain child views with parent state
         container.setEnabled(enabled);
+    }
+
+    private void setContent(Context context) {
+        removeAllViews();
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        textView = new TextView(context);
+        setTextPadding(textPaddingArray);
+        container = new LinearLayout(context);
+        container.setLayoutParams(layoutParams);
+        container.setOrientation(VERTICAL);
+        layoutParams.weight = 1;
+
+        if (drawablePosition < 0 && drawablePosition > 4) {
+            textView.setLayoutParams(layoutParams);
+            textView.setGravity(Gravity.CENTER);
+            container.addView(textView);
+        } else {
+            StateListDrawable listDrawable = new StateListDrawable();
+            listDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
+            listDrawable.addState(new int[]{android.R.attr.state_enabled}, drawableNormal);
+            listDrawable.addState(new int[]{}, drawableDisabled);
+
+            imageContainer = new ImageView(context);
+            imageContainer.setPadding(imagePaddingArray[LEFT], imagePaddingArray[TOP], imagePaddingArray[RIGHT], imagePaddingArray[BOTTOM]);
+            if (drawable != null) {
+                imageContainer.setImageDrawable(drawable);
+            } else {
+                imageContainer.setImageDrawable(listDrawable);
+            }
+
+            imageContainer.setLayoutParams(layoutParams);
+            imageContainer.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            switch (drawablePosition) {
+                case 0:
+                    container.setOrientation(HORIZONTAL);
+                    container.addView(imageContainer);
+                    break;
+                case 1:
+                    container.addView(imageContainer);
+                    break;
+                case 3:
+                    break;
+            }
+            if (text != null) {
+                textView.setLayoutParams(layoutParams);
+                textView.setGravity(Gravity.CENTER);
+                container.addView(textView);
+            }
+
+            switch (drawablePosition) {
+                case 2:
+                    container.addView(imageContainer);
+                    break;
+                case 3:
+                    container.setOrientation(HORIZONTAL);
+                    container.addView(imageContainer);
+                    break;
+            }
+        }
+
+        addView(container);
+
+        ColorStateList textColorList = new ColorStateList(new int[][]{new int[]{android.R.attr.state_pressed}, new int[]{android.R.attr.state_enabled}, new int[]{}},
+                new int[]{textColorPressed, textColor, textColorDisabled});
+
+        textView.setText(text);
+        if (textSize > 0) textView.setTextSize(textSize);
+        if (textColor != 0) textView.setTextColor(textColorList);
+        else if (textColorState != null) textView.setTextColor(textColorState);
     }
 
     /**
@@ -238,7 +337,6 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
-
     /**
      * Set frame size and color from color state list.
      * Only three states are use: disabled, pressed, normal.
@@ -305,6 +403,53 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
     }
 
     /**
+     * Set text view padding
+     *
+     * @param padding 4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
+     */
+    public void setTextPadding(int[] padding) {
+        textView.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+    }
+
+    /**
+     * Set image to button
+     *
+     * @param position         CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM
+     * @param drawableNormal   state normal
+     * @param drawablePressed  state pressed
+     * @param drawableDisabled state disabled
+     * @param padding          4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
+     */
+    public void setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, int[] padding) {
+        this.drawableDisabled = drawableDisabled;
+        this.drawablePressed = drawablePressed;
+        this.drawableNormal = drawableNormal;
+        this.drawablePosition = position;
+
+        if (padding != null)
+            imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+
+        setContent(getContext());
+    }
+
+    /**
+     * Set image to button
+     *
+     * @param position CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM
+     * @param drawable image resource
+     * @param padding  4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
+     */
+    public void setImage(int position, Drawable drawable, int[] padding) {
+        this.drawable = drawable;
+        this.drawablePosition = position;
+
+        if (padding != null)
+            imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+
+        setContent(getContext());
+    }
+
+    /**
      * Set elevation to button. If enabled button is smaller because shadow must have space to show.
      *
      * @param enabled true - enable elevation
@@ -313,7 +458,6 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
     public void setElevationEnabled(boolean enabled) {
 
         isElevationEnabled = enabled;
-
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 
             int var;
@@ -327,7 +471,7 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
                 container.setElevation(0);
                 container.setStateListAnimator(null);
             }
-            FrameLayout.LayoutParams layoutParams = (LayoutParams) container.getLayoutParams();
+            LayoutParams layoutParams = (LayoutParams) container.getLayoutParams();
             layoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
             layoutParams.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
             layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, var, getResources().getDisplayMetrics());
@@ -337,9 +481,9 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
     }
 
     /**
-     * Get backgroundColor shape type.
+     * Get background shape type.
      *
-     * @return backgroundColor shape type (GradientDrawable.RECTANGLE or OVAL)
+     * @return background shape type (GradientDrawable.RECTANGLE or OVAL)
      */
     public int getShapeType() {
         return shapeType;
@@ -414,5 +558,49 @@ public class CustomButton extends FrameLayout implements View.OnClickListener {
 
     public float getFrameSize() {
         return frameSize;
+    }
+
+    public int getTextColor() {
+        return textColor;
+    }
+
+    public float getTextSize() {
+        return textSize;
+    }
+
+    public int getTextPadding() {
+        return textPadding;
+    }
+
+    public int[] getTextPaddingArray() {
+        return textPaddingArray;
+    }
+
+    public Drawable getDrawable() {
+        return drawable;
+    }
+
+    public Drawable getDrawableNormal() {
+        return drawableNormal;
+    }
+
+    public Drawable getDrawableDisabled() {
+        return drawableDisabled;
+    }
+
+    public Drawable getDrawablePressed() {
+        return drawablePressed;
+    }
+
+    public int getDrawablePosition() {
+        return drawablePosition;
+    }
+
+    public int getImagePadding() {
+        return imagePadding;
+    }
+
+    public int[] getImagePaddingArray() {
+        return imagePaddingArray;
     }
 }
