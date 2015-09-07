@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.change_background_color_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customButton.setBackgroundColor(new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}, new int[]{android.R.attr.state_pressed}, new int[]{}}, new int[]{Color.GREEN, Color.MAGENTA, Color.RED}));
+                customButton.setBackgroundColorStateList(new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}, new int[]{android.R.attr.state_pressed}, new int[]{}}, new int[]{Color.GREEN, Color.MAGENTA, Color.RED}));
             }
         });
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.shape_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customButton.setShape(GradientDrawable.OVAL, 40);
+                customButton.setShapeBackground(GradientDrawable.OVAL, 40);
             }
         });
 
@@ -58,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 customButton.setElevationEnabled(!customButton.isElevationEnabled());
+            }
+        });
+
+        findViewById(R.id.frame_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customButton.setFrame(Color.DKGRAY, 14);
             }
         });
 

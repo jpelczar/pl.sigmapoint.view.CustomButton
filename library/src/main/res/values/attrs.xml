@@ -2,28 +2,29 @@
 <resources>
     <declare-styleable name="CustomButton">
 
-        <attr name="bc_background_pressed" format="color" />
-        <attr name="bc_background_disabled" format="color" />
-        <attr name="bc_background" format="color" />
-        <attr name="bc_background_state_list" format="color" />
+        <attr name="cb_background_pressed" format="color" />
+        <attr name="cb_background_disabled" format="color" />
+        <attr name="cb_background" format="color" />
+        <attr name="cb_background_state_list" format="color" />
 
-        <attr name="bc_text_color_pressed" format="color" />
-        <attr name="bc_text_color_disabled" format="color" />
-        <attr name="bc_text_color" format="color" />
-        <attr name="bc_text_size" format="dimension" />
+        <attr name="cb_text_color_pressed" format="color" />
+        <attr name="cb_text_color_disabled" format="color" />
+        <attr name="cb_text_color" format="color" />
+        <attr name="cb_text_size" format="dimension" />
         <attr name="android:text" />
         <attr name="android:textColor" />
 
-        <attr name="bc_shape_radius" format="dimension" />
-        <attr name="bc_shape_type" format="integer">
+        <attr name="cb_shape_radius" format="dimension" />
+        <attr name="cb_shape_type" format="integer">
             <enum name="rect" value="0" />
             <enum name="oval" value="1" />
         </attr>
-        <attr name="bc_stroke_color_pressed" format="color" />
-        <attr name="bc_stroke_color_disabled" format="color" />
-        <attr name="bc_stroke_color" format="color" />
-        <attr name="bc_stroke_size" format="dimension" />
+        <attr name="cb_frame_color_pressed" format="color" />
+        <attr name="cb_frame_color_disabled" format="color" />
+        <attr name="cb_frame_color" format="color" />
+        <attr name="cb_frame_size" format="dimension" />
+        <attr name="cb_frame_state_list" format="color" />
 
-        <attr name="bc_elevation_enabled" format="boolean" />
+        <attr name="cb_elevation_enabled" format="boolean" />
     </declare-styleable>
 </resources>

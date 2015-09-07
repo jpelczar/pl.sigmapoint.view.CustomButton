@@ -57,6 +57,13 @@
             android:layout_weight="1"
             android:text="elevation" />
 
+        <Button
+            android:id="@+id/frame_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="frame" />
+
     </LinearLayout>
 
     <pl.sigmapoint.customview.CustomButton
@@ -65,16 +72,15 @@
         android:layout_height="100dp"
         android:layout_centerInParent="true"
         android:text="@string/hello_world"
-        android:textColor="@color/state"
-        app:bc_background="@color/blue_normal"
-        app:bc_background_disabled="@color/blue_light"
-        app:bc_background_pressed="@color/blue_dark"
-        app:bc_elevation_enabled="true"
-        app:bc_shape_radius="5dp"
-        app:bc_shape_type="rect"
-        app:bc_text_color="@color/orange_normal"
-        app:bc_text_color_disabled="@color/orange_light"
-        app:bc_text_color_pressed="@color/orange_dark" />
+        app:cb_background="@color/blue_normal"
+        app:cb_background_disabled="@color/blue_light"
+        app:cb_background_pressed="@color/blue_dark"
+        app:cb_elevation_enabled="true"
+        app:cb_shape_radius="5dp"
+        app:cb_shape_type="rect"
+        app:cb_text_color="@color/orange_normal"
+        app:cb_text_color_disabled="@color/orange_light"
+        app:cb_text_color_pressed="@color/orange_dark" />
 
 
 </RelativeLayout>
