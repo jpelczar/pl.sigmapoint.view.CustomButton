@@ -31,6 +31,7 @@ cb_text_padding_left - {format - dimension} <br>
 cb_text_padding_top - {format - dimension} <br>
 cb_text_padding_right - {format - dimension} <br>
 cb_text_padding_bottom - {format - dimension} <br>
+cb_text_weight - {format - integer} <br>
 <br>
 cb_shape_radius - corner radius {format - dimension}<br>
 cb_shape_type - shape type, you can choose: rect or oval <br>
@@ -51,7 +52,9 @@ cb_image_padding - {format - dimension} <br>
 cb_image_padding_left - {format - dimension} <br>
 cb_image_padding_top - {format - dimension} <br>
 cb_image_padding_right - {format - dimension} <br>
-cb_image_padding_bottom - {format - dimension} <br> </p>
+cb_image_padding_bottom - {format - dimension} <br>
+cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start, fit_end, fit_xy} <br>
+cb_image_weight - {format - integer} </p>
 <h3> Java Code </h3>
 setShapeBackground(int shapeType, int shapeRadius) <br>
 setBackgroundColorStateList(ColorStateList colorStateList) <br>
@@ -64,7 +67,10 @@ setTextColor(ColorStateList colorStateList) <br>
 setText(String text) <br>
 setTextSize(float size) <br>
 setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM} <br>
-setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, int[] padding) <br>
-setImage(int position, Drawable drawable, int[] padding) <br>
+setTextParams(int weight, int[] padding) <br>
+setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding) <br>
+setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding)<br>
 setElevationEnabled(boolean enabled) <br>
-and evry XML tag have getter <br>
+and evry XML tag have getter
+<h3> Static field </h3>
+LEFT, TOP, RIGHT, BOTTOM
