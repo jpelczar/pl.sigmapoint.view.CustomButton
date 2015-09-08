@@ -9,7 +9,7 @@ Then select library folder from project. And start use. </p>
 <h2> Reference </h2>
 <h3> XML tag's </h3>
 
-This is the starter tags of CustomButton:<br>
+This is the base tag of CustomButton:<br>
 \<pl.sigmapoint.customview.CustomButton<br>
      &emsp;&emsp;   android:id="@+id/sigmapoint_button"<br>
      &emsp;&emsp;   android:layout_width="match_parent"<br>
