@@ -18,6 +18,7 @@
         <attr name="cb_text_padding_top" format="dimension" />
         <attr name="cb_text_padding_right" format="dimension" />
         <attr name="cb_text_padding_bottom" format="dimension" />
+        <attr name="cb_text_weight" format="integer" />
 
         <attr name="cb_shape_radius" format="dimension" />
         <attr name="cb_shape_type" format="integer">
@@ -56,6 +57,7 @@
             <enum name="fit_end" value="5" />
             <enum name="fit_xy" value="6" />
         </attr>
+        <attr name="cb_image_weight" format="integer" />
 
     </declare-styleable>
 </resources>
