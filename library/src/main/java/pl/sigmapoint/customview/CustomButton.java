@@ -229,10 +229,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         drawableNormal.setColor(backgroundColor);
         drawablePressed.setColor(backgroundPressed);
         drawableDisabled.setColor(backgroundDisabled);
-        drawableNormal.setStroke((int) frameSize, frameColor);
-        drawablePressed.setStroke((int) frameSize, frameColorPressed);
-        drawableDisabled.setStroke((int) frameSize, frameColorDisabled);
-
+        if (frameSize > 0) {
+            drawableNormal.setStroke((int) frameSize, frameColor);
+            drawablePressed.setStroke((int) frameSize, frameColorPressed);
+            drawableDisabled.setStroke((int) frameSize, frameColorDisabled);
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 
@@ -246,7 +247,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                 container.setBackgroundDrawable(stateListDrawable);
 
         } else {
-
             stateListDrawable.addState(new int[]{android.R.attr.state_enabled}, drawableNormal);
             stateListDrawable.addState(new int[]{}, drawableDisabled);
 
@@ -332,11 +332,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
-    public void removeFrame() {
-        frameSize = 0;
-        setShapeBackground();
-    }
-
     /**
      * Set frame size and color from color state list.
      * Only three states are use: disabled, pressed, normal.
@@ -360,6 +355,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      */
     public void setFrameSize(float frameSize) {
         this.frameSize = frameSize;
+        setShapeBackground();
+    }
+
+    public void removeFrame() {
+        frameSize = 0;
         setShapeBackground();
     }
 
