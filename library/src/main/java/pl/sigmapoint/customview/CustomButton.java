@@ -434,6 +434,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         textView.setTextSize(size);
     }
 
+    public void setTextParams(int weight, int[] padding) {
+        this.textWeight = weight;
+        this.textPaddingArray = padding;
+    }
+
     /**
      * Set text view padding
      *
@@ -453,12 +458,14 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param scaleType        all without MATRIX
      * @param padding          4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
      */
-    public void setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int[] padding) {
+    public void setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding) {
         this.drawableDisabled = drawableDisabled;
         this.drawablePressed = drawablePressed;
         this.drawableNormal = drawableNormal;
         this.drawablePosition = position;
         this.imageScaleType = scaleType;
+        this.imageWeight = weight;
+        this.imagePaddingArray = padding;
 
         if (padding != null)
             imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
@@ -476,9 +483,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param scaleType all without MATRIX
      * @param padding   4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
      */
-    public void setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int[] padding) {
+    public void setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding) {
         this.drawable = drawable;
         this.drawablePosition = position;
+        this.imageWeight = weight;
+        this.imagePaddingArray = padding;
 
         if (padding != null)
             imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
@@ -645,5 +654,13 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
     public ImageView.ScaleType getImageScaleType() {
         return imageScaleType;
+    }
+
+    public int getImageWeight() {
+        return imageWeight;
+    }
+
+    public int getTextWeight() {
+        return textWeight;
     }
 }
