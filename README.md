@@ -71,7 +71,7 @@ setTextSize(float size)
 setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
 setTextParams(int weight, int[] padding)
 setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding)
-setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding)<br>
+setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding)
 setElevationEnabled(boolean enabled) 
 and evry XML tag have getter
 ```
