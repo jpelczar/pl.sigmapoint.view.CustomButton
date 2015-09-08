@@ -10,12 +10,13 @@ Then select library folder from project. And start use. </p>
 <h3> XML tag's </h3>
 
 This is the base tag of CustomButton:<br>
-\<pl.sigmapoint.customview.CustomButton<br>
-     &emsp;&emsp;   android:id="@+id/sigmapoint_button"<br>
-     &emsp;&emsp;   android:layout_width="match_parent"<br>
-     &emsp;&emsp;   android:layout_height="match_parent"<br>
-     &emsp;&emsp;   android:text="text"/><br>
-</br>
+```xml
+<pl.sigmapoint.customview.CustomButton<br>
+     android:id="@+id/sigmapoint_button"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:text="text"/>
+```
 <p> You can specify the following things:<br>
 cb_background - background color of normal button  {format - color} - recommended <br>
 cb_background_pressed - background color of pressed button {format - color} <br>
@@ -56,21 +57,23 @@ cb_image_padding_bottom - {format - dimension} <br>
 cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start, fit_end, fit_xy} <br>
 cb_image_weight - {format - integer} </p>
 <h3> Java Code </h3>
-setShapeBackground(int shapeType, int shapeRadius) <br>
-setBackgroundColorStateList(ColorStateList colorStateList) <br>
-setFrame(int color, float size)	<br>
-setFrame(ColorStateList colorStateList, float size) <br>
-setFrameSize(float frameSize) <br>
-removeFrame() <br>
-setTextColor(int color) <br>
-setTextColor(ColorStateList colorStateList) <br>
-setText(String text) <br>
-setTextSize(float size) <br>
-setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM} <br>
-setTextParams(int weight, int[] padding) <br>
-setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding) <br>
+```java
+setShapeBackground(int shapeType, int shapeRadius)
+setBackgroundColorStateList(ColorStateList colorStateList)
+setFrame(int color, float size)
+setFrame(ColorStateList colorStateList, float size)
+setFrameSize(float frameSize)
+removeFrame() 
+setTextColor(int color)
+setTextColor(ColorStateList colorStateList)
+setText(String text)
+setTextSize(float size)
+setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
+setTextParams(int weight, int[] padding)
+setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding)
 setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding)<br>
-setElevationEnabled(boolean enabled) <br>
+setElevationEnabled(boolean enabled) 
 and evry XML tag have getter
+```
 <h3> Static field </h3>
 LEFT, TOP, RIGHT, BOTTOM
