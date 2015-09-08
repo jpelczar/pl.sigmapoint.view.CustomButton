@@ -24,10 +24,10 @@ import android.widget.TextView;
  */
 public class CustomButton extends LinearLayout implements View.OnClickListener {
 
-    public static int LEFT = 0;
-    public static int TOP = 1;
-    public static int RIGHT = 2;
-    public static int BOTTOM = 3;
+    public static final int LEFT = 0;
+    public static final int TOP = 1;
+    public static final int RIGHT = 2;
+    public static final int BOTTOM = 3;
 
     protected TextView textView; //text container
     protected LinearLayout container; //all content container
@@ -52,12 +52,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     private int drawablePosition;
     private int imagePadding;
     private int[] imagePaddingArray;
-
+    private int imageScaleTypeAttr;
 
     private int shapeType; // converted shape type from shapeTypeAttr
+    private ImageView.ScaleType imageScaleType;
 
     //TODO stosunek podziału image / text
-    //TODO scaletype of image
 
     public CustomButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -99,12 +99,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             drawableNormal = attributes.getDrawable(R.styleable.CustomButton_cb_image_normal);
             drawablePressed = attributes.getDrawable(R.styleable.CustomButton_cb_image_pressed);
             drawableDisabled = attributes.getDrawable(R.styleable.CustomButton_cb_image_disabled);
+            imageScaleTypeAttr = attributes.getInteger(R.styleable.CustomButton_cb_image_scale_type, 0);
             imagePadding = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding, 0);
             imagePaddingArray[LEFT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_left, imagePadding);
             imagePaddingArray[TOP] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_top, imagePadding);
             imagePaddingArray[RIGHT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_right, imagePadding);
             imagePaddingArray[BOTTOM] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_bottom, imagePadding);
-
 
             if (backgroundColorState != null) { // if backgroundColor state is not null the set color from color state list to specific colors
                 backgroundColorStateListToIntegers(backgroundColorState);
@@ -112,6 +112,30 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
             if (frameColorState != null) { // if frame state is not null the set color from color state list to specific colors
                 frameColorStateListToIntegers(frameColorState);
+            }
+
+            switch (imageScaleTypeAttr) {
+                case 0:
+                    imageScaleType = ImageView.ScaleType.CENTER;
+                    break;
+                case 1:
+                    imageScaleType = ImageView.ScaleType.CENTER_INSIDE;
+                    break;
+                case 2:
+                    imageScaleType = ImageView.ScaleType.CENTER_CROP;
+                    break;
+                case 3:
+                    imageScaleType = ImageView.ScaleType.FIT_CENTER;
+                    break;
+                case 4:
+                    imageScaleType = ImageView.ScaleType.FIT_START;
+                    break;
+                case 5:
+                    imageScaleType = ImageView.ScaleType.FIT_END;
+                    break;
+                case 6:
+                    imageScaleType = ImageView.ScaleType.FIT_XY;
+                    break;
             }
 
             setContent(context);
@@ -163,24 +187,21 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
             imageContainer = new ImageView(context);
             imageContainer.setPadding(imagePaddingArray[LEFT], imagePaddingArray[TOP], imagePaddingArray[RIGHT], imagePaddingArray[BOTTOM]);
+            imageContainer.setScaleType(imageScaleType);
+            imageContainer.setLayoutParams(layoutParams);
             if (drawable != null) {
                 imageContainer.setImageDrawable(drawable);
             } else {
                 imageContainer.setImageDrawable(listDrawable);
             }
 
-            imageContainer.setLayoutParams(layoutParams);
-            imageContainer.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
             switch (drawablePosition) {
-                case 0:
+                case LEFT:
                     container.setOrientation(HORIZONTAL);
                     container.addView(imageContainer);
                     break;
-                case 1:
+                case TOP:
                     container.addView(imageContainer);
-                    break;
-                case 3:
                     break;
             }
             if (text != null) {
@@ -190,10 +211,10 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             }
 
             switch (drawablePosition) {
-                case 2:
+                case RIGHT:
                     container.addView(imageContainer);
                     break;
-                case 3:
+                case BOTTOM:
                     container.setOrientation(HORIZONTAL);
                     container.addView(imageContainer);
                     break;
@@ -418,16 +439,20 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param drawableNormal   state normal
      * @param drawablePressed  state pressed
      * @param drawableDisabled state disabled
+     * @param scaleType        all without MATRIX
      * @param padding          4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
      */
-    public void setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, int[] padding) {
+    public void setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int[] padding) {
         this.drawableDisabled = drawableDisabled;
         this.drawablePressed = drawablePressed;
         this.drawableNormal = drawableNormal;
         this.drawablePosition = position;
+        this.imageScaleType = scaleType;
 
         if (padding != null)
             imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+        if (scaleType != null)
+            imageContainer.setScaleType(scaleType);
 
         setContent(getContext());
     }
@@ -435,16 +460,19 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     /**
      * Set image to button
      *
-     * @param position CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM
-     * @param drawable image resource
-     * @param padding  4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
+     * @param position  CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM
+     * @param drawable  image resource
+     * @param scaleType all without MATRIX
+     * @param padding   4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
      */
-    public void setImage(int position, Drawable drawable, int[] padding) {
+    public void setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int[] padding) {
         this.drawable = drawable;
         this.drawablePosition = position;
 
         if (padding != null)
             imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+        if (scaleType != null)
+            imageContainer.setScaleType(scaleType);
 
         setContent(getContext());
     }
@@ -602,5 +630,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
     public int[] getImagePaddingArray() {
         return imagePaddingArray;
+    }
+
+    public ImageView.ScaleType getImageScaleType() {
+        return imageScaleType;
     }
 }

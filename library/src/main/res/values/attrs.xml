@@ -47,6 +47,15 @@
         <attr name="cb_image_padding_top" format="dimension" />
         <attr name="cb_image_padding_right" format="dimension" />
         <attr name="cb_image_padding_bottom" format="dimension" />
+        <attr name="cb_image_scale_type" format="integer">
+            <enum name="center" value="0" />
+            <enum name="center_inside" value="1" />
+            <enum name="center_crop" value="2" />
+            <enum name="fit_center" value="3" />
+            <enum name="fit_start" value="4" />
+            <enum name="fit_end" value="5" />
+            <enum name="fit_xy" value="6" />
+        </attr>
 
     </declare-styleable>
 </resources>
