@@ -58,15 +58,27 @@ cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start
 cb_image_weight - {format - integer} </p>
 <h3> Java Code </h3>
 ```java
+CustomButton(Context context, LayoutParams layoutParams, int backgroundColor, int textColor, Drawable icon)
 setShapeBackground(int shapeType, int shapeRadius)
 setBackgroundColorStateList(ColorStateList colorStateList)
+setBackgroundColor(int color)
+setBackgroundColorNormal(int color)
+setBackgroundColorPressed(int color)
+setBackgroundColorDosabled(int color)
 setFrame(int color, float size)
 setFrame(ColorStateList colorStateList, float size)
+setFrameColor(int color)
+setFrameColorNormal(int color)
+setFrameColorPressed(int color)
+setFrameColorDisabled(int color)
 setFrameSize(float frameSize)
 removeFrame() 
-setTextColor(int color)
-setTextColor(ColorStateList colorStateList)
 setText(String text)
+setTextColor(int color)
+setTextColorNormal(int color)
+setTextColorPressed(int color)
+setTextColorDisabled(int color)
+setTextColor(ColorStateList colorStateList)
 setTextSize(float size)
 setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
 setTextParams(int weight, int[] padding)
@@ -76,4 +88,8 @@ setElevationEnabled(boolean enabled)
 and evry XML tag have getter
 ```
 <h3> Static field </h3>
-LEFT, TOP, RIGHT, BOTTOM
+LEFT, TOP, RIGHT, BOTTOM - for image position 
+
+<h2> Dependencies </h2>
+In demo application <a href="https://github.com/yukuku/ambilwarna"> Ambil Warna Library</a> was used.
+    
