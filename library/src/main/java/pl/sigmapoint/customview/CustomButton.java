@@ -227,7 +227,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
         LayoutParams layoutParamsText;
         LayoutParams layoutParamsImage = null;
-        if (drawablePosition > 0 || drawablePosition < 3) {
+        if (drawablePosition >= 0 || drawablePosition <= 3) {
             layoutParamsText = new LinearLayout.LayoutParams((drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT, (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0);
             layoutParamsImage = new LinearLayout.LayoutParams((drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT, (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0);
             layoutParamsText.weight = (text != null) ? ((textWeight == 0) ? 1 : textWeight) : 0;
@@ -267,6 +267,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                     container.setOrientation(HORIZONTAL);
                     container.addView(imageContainer);
                     break;
+                case RIGHT:
+                    container.setOrientation(HORIZONTAL);
+                    break;
                 case TOP:
                     container.addView(imageContainer);
                     break;
@@ -281,7 +284,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                     container.addView(imageContainer);
                     break;
                 case BOTTOM:
-                    container.setOrientation(HORIZONTAL);
                     container.addView(imageContainer);
                     break;
             }
@@ -514,18 +516,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      *
      * @param color integer color number
      */
-    public void setTextColor(int color) {
-        textColorNormal = color;
-        textColorPressed = color;
-        textColorDisabled = color;
-        textView.setTextColor(color);
-    }
-
-    /**
-     * Set text color.
-     *
-     * @param color integer color number
-     */
     public void setTextColorNormal(int color) {
         textColorNormal = color;
         textColorArray[COLOR_INDEX_NORMAL] = color;
@@ -545,6 +535,18 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         textColorArray[COLOR_INDEX_DISABLED] = textColorDisabled;
         textColorState = new ColorStateList(stateArray, textColorArray);
         textView.setTextColor(textColorState);
+    }
+
+    /**
+     * Set text color.
+     *
+     * @param color integer color number
+     */
+    public void setTextColor(int color) {
+        textColorNormal = color;
+        textColorPressed = color;
+        textColorDisabled = color;
+        textView.setTextColor(color);
     }
 
     /**
@@ -670,21 +672,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return shapeType;
     }
 
-    /**
-     * Get text from button.
-     *
-     * @return text from button
-     */
-    public String getText() {
-        return String.valueOf(textView.getText());
-    }
 
-    /**
-     * Check if elevation is enabled.
-     * On pre-Lollipop return true.
-     *
-     * @return true if enabled
-     */
     public boolean isElevationEnabled() {
         return isElevationEnabled;
     }
@@ -701,8 +689,16 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return backgroundColorNormal;
     }
 
+    public int getBackgroundColor() {
+        return backgroundColorNormal;
+    }
+
     public ColorStateList getBackgroundColorState() {
         return backgroundColorState;
+    }
+
+    public String getText() {
+        return String.valueOf(textView.getText());
     }
 
     public int getTextColorPressed() {
@@ -711,6 +707,26 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
     public int getTextColorDisabled() {
         return textColorDisabled;
+    }
+
+    public int getTextColorNormal() {
+        return textColorNormal;
+    }
+
+    public int getTextColor() {
+        return textColorNormal;
+    }
+
+    public float getTextSize() {
+        return textSize;
+    }
+
+    public int getTextPadding() {
+        return textPadding;
+    }
+
+    public int[] getTextPaddingArray() {
+        return textPaddingArray;
     }
 
     public ColorStateList getTextColorState() {
@@ -739,22 +755,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
     public float getFrameSize() {
         return frameSize;
-    }
-
-    public int getTextColorNormal() {
-        return textColorNormal;
-    }
-
-    public float getTextSize() {
-        return textSize;
-    }
-
-    public int getTextPadding() {
-        return textPadding;
-    }
-
-    public int[] getTextPaddingArray() {
-        return textPaddingArray;
     }
 
     public Drawable getDrawable() {

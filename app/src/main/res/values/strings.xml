@@ -3,4 +3,23 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="bg_normal">Background Color Normal</string>
+    <string name="bg_pressed">Background Color Pressed</string>
+    <string name="bg_disabled">Background Color Disabled</string>
+    <string name="txt_normal">Text Color Normal</string>
+    <string name="txt_pressed">Text Color Pressed</string>
+    <string name="txt_disabled">Text Color Disabled</string>
+    <string name="frame_normal">Frame Color Normal</string>
+    <string name="frame_pressed">Frame Color Pressed</string>
+    <string name="frame_disabled">Frame Color Disabled</string>
+    <string name="frame_size">Frame Size</string>
+    <string name="corner_radius">Corner radius</string>
+    <string name="button_text">Button text</string>
+    <string name="icon">Icon</string>
+    <string name="elevation">Elevation</string>
+    <string name="generate">Generate</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

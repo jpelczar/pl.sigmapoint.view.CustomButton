@@ -8,7 +8,7 @@
     <color name="blue_normal">#2196F3</color>
     <color name="blue_dark">#1565C0</color>
 
-    <color name="orange_light">#FFCC80</color>
-    <color name="orange_normal">#FF9800</color>
-    <color name="orange_dark">#EF6C00</color>
+    <color name="pink_light">#F8BBD0</color>
+    <color name="pink_normal">#E91E63</color>
+    <color name="pink_dark">#AD1457</color>
 </resources>

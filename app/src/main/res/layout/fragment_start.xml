@@ -1,0 +1,331 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/bg_normal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/bg_normal"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/bg_pressed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/bg_pressed"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/bg_disabled"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/bg_disabled"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/txt_normal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/txt_normal"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/txt_pressed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/txt_pressed"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/txt_disabled"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/txt_disabled"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/frame_normal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/frame_normal"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/frame_pressed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/frame_pressed"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/frame_disabled"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="@string/frame_disabled"
+            app:cb_background="@color/blue_normal"
+            app:cb_background_disabled="@color/blue_light"
+            app:cb_background_pressed="@color/blue_dark"
+            app:cb_elevation_enabled="true"
+            app:cb_frame_color="@color/red_normal"
+            app:cb_frame_color_disabled="@color/red_light"
+            app:cb_frame_color_pressed="@color/red_dark"
+            app:cb_frame_size="5dp"
+            app:cb_shape_radius="5dp"
+            app:cb_shape_type="rect"
+            app:cb_text_color="@color/pink_normal"
+            app:cb_text_color_disabled="@color/pink_light"
+            app:cb_text_color_pressed="@color/pink_dark"
+            app:cb_text_padding="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/button_text"
+            android:padding="2dp" />
+
+        <EditText
+            android:id="@+id/et_corner_radius"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/corner_radius"
+            android:inputType="numberDecimal"
+            android:padding="2dp" />
+
+        <EditText
+            android:id="@+id/et_frame_size"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/frame_size"
+            android:inputType="numberDecimal"
+            android:padding="2dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/enable"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textOff="Enable"
+            android:textOn="Enable" />
+
+        <ToggleButton
+            android:id="@+id/tb_elevation"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:textOff="@string/elevation"
+            android:textOn="@string/elevation" />
+
+        <ToggleButton
+            android:id="@+id/tb_icon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:textOff="@string/icon"
+            android:textOn="@string/icon" />
+
+        <Spinner
+            android:id="@+id/spinner_icon_position"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/frame_size"
+            android:inputType="numberDecimal"
+            android:padding="2dp" />
+
+    </LinearLayout>
+
+    <pl.sigmapoint.customview.CustomButton
+        android:id="@+id/generate"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="2dp"
+        android:text="@string/generate"
+        app:cb_background="@color/blue_normal"
+        app:cb_background_disabled="@color/blue_light"
+        app:cb_background_pressed="@color/blue_dark"
+        app:cb_elevation_enabled="true"
+        app:cb_frame_color="@color/red_normal"
+        app:cb_frame_color_disabled="@color/red_light"
+        app:cb_frame_color_pressed="@color/red_dark"
+        app:cb_frame_size="5dp"
+        app:cb_shape_radius="5dp"
+        app:cb_shape_type="rect"
+        app:cb_text_color="@color/pink_normal"
+        app:cb_text_color_disabled="@color/pink_light"
+        app:cb_text_color_pressed="@color/pink_dark"
+        app:cb_text_padding="5dp"
+        app:cb_text_size="30dp" />
+
+</LinearLayout>
