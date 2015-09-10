@@ -18,7 +18,9 @@ This is the base tag of CustomButton:<br>
      android:text="text"/>
 ```
 <p> You can specify the following things:<br>
-cb_background - background color of normal button  {format - color} - recommended <br>
+cb_primary_color - \/
+cb_secondary_color - you can specify only two colors for all button. But it will be override by background, text, frame color. {format - color} <br>
+cb_background - background color of normal button  {format - color} <br>
 cb_background_pressed - background color of pressed button {format - color} <br>
 cb_background_disabled - background color of disabled button {format - color} <br>
 cb_background_state_list - {format - ColorStateList} <br>
@@ -58,7 +60,10 @@ cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start
 cb_image_weight - {format - integer} </p>
 <h3> Java Code </h3>
 ```java
-CustomButton(Context context, LayoutParams layoutParams, int backgroundColor, int textColor, Drawable icon)
+CustomButton(Context context, LayoutParams layoutParams, int primaryColor, int secondaryColor, Drawable icon)
+setPrimaryColor(int color)
+setSecondaryColor(int color)
+setMainColors(int primaryColor, int secondaryColor)
 setShapeBackground(int shapeType, int shapeRadius)
 setBackgroundColorStateList(ColorStateList colorStateList)
 setBackgroundColor(int color)

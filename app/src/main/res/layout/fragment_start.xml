@@ -312,20 +312,9 @@
         android:layout_weight="1"
         android:padding="2dp"
         android:text="@string/generate"
-        app:cb_background="@color/blue_normal"
-        app:cb_background_disabled="@color/blue_light"
-        app:cb_background_pressed="@color/blue_dark"
-        app:cb_elevation_enabled="true"
-        app:cb_frame_color="@color/red_normal"
-        app:cb_frame_color_disabled="@color/red_light"
-        app:cb_frame_color_pressed="@color/red_dark"
         app:cb_frame_size="5dp"
-        app:cb_shape_radius="5dp"
-        app:cb_shape_type="rect"
-        app:cb_text_color="@color/pink_normal"
-        app:cb_text_color_disabled="@color/pink_light"
-        app:cb_text_color_pressed="@color/pink_dark"
-        app:cb_text_padding="5dp"
-        app:cb_text_size="30dp" />
+        app:cb_primary_color="@color/blue_normal"
+        app:cb_secondary_color="@color/red_normal"
+        app:cb_shape_radius="5dp" />
 
 </LinearLayout>

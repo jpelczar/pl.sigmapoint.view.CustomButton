@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -38,6 +39,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     protected LinearLayout container; //all content container
     protected ImageView imageContainer;
 
+    private int primaryColor, secondaryColor;
     private int backgroundColorPressed, backgroundColorDisabled, backgroundColorNormal; // colors for each backgroundColorNormal state
     private ColorStateList backgroundColorState; // color state list for backgroundColorNormal
     private int textColorPressed, textColorDisabled, textColorNormal; // colors for each text color state
@@ -74,29 +76,36 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         imageContainer = new ImageView(context);
     }
 
-    public CustomButton(Context context, ViewGroup.LayoutParams params, int backgroundColorNormal, int textColorNormal, Drawable imageNormal) {
+    public CustomButton(Context context, ViewGroup.LayoutParams params, int primaryColor, int secondaryColor, Drawable imageNormal) {
         super(context);
         init(context);
         setLayoutParams(params);
 
-        this.backgroundColorNormal = backgroundColorNormal;
-        this.textColorNormal = textColorNormal;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+
         this.drawableNormal = imageNormal;
 
-        this.backgroundColorPressed = backgroundColorNormal;
-        this.backgroundColorDisabled = backgroundColorNormal;
+        this.backgroundColorNormal = primaryColor;
+        this.backgroundColorPressed = secondaryColor;
+        this.backgroundColorDisabled = secondaryColor;
 
-        this.textColorDisabled = textColorNormal;
-        this.textColorPressed = textColorNormal;
+        this.textColorNormal = secondaryColor;
+        this.textColorDisabled = primaryColor;
+        this.textColorPressed = primaryColor;
 
-        shapeType = 0;
-        shapeRadius = 0;
-        imageScaleType = ImageView.ScaleType.FIT_CENTER;
+        this.frameColorNormal = secondaryColor;
+        this.frameColorPressed = primaryColor;
+        this.frameColorDisabled = primaryColor;
 
-        if (drawableNormal != null) drawablePosition = LEFT; //default position
+        this.shapeType = 0;
+        this.shapeRadius = 0;
+        this.imageScaleType = ImageView.ScaleType.FIT_CENTER;
+
+        if (drawableNormal != null) this.drawablePosition = LEFT; //default position
         else drawablePosition = -1;
 
-        setContent(context);
+        setContent();
 
         setShapeBackground(); // set shape and backgroundColorNormal to button
         setElevationEnabled(true); // this method will work only for post-L android. Set elevation or disable it and set margins if needed
@@ -112,14 +121,18 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomButton, 0, 0);
 
         try {
-            backgroundColorNormal = attributes.getColor(R.styleable.CustomButton_cb_background, 0);
-            backgroundColorPressed = attributes.getColor(R.styleable.CustomButton_cb_background_pressed, backgroundColorNormal);
-            backgroundColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_background_disabled, backgroundColorNormal);
+
+            primaryColor = attributes.getColor(R.styleable.CustomButton_cb_primary_color, Color.LTGRAY);
+            secondaryColor = attributes.getColor(R.styleable.CustomButton_cb_secondary_color, Color.GRAY);
+
+            backgroundColorNormal = attributes.getColor(R.styleable.CustomButton_cb_background, primaryColor);
+            backgroundColorPressed = attributes.getColor(R.styleable.CustomButton_cb_background_pressed, secondaryColor);
+            backgroundColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_background_disabled, secondaryColor);
             backgroundColorState = attributes.getColorStateList(R.styleable.CustomButton_cb_background_state_list);
 
-            textColorNormal = attributes.getColor(R.styleable.CustomButton_cb_text_color, 0);
-            textColorPressed = attributes.getColor(R.styleable.CustomButton_cb_text_color_pressed, textColorNormal);
-            textColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_text_color_disabled, textColorNormal);
+            textColorNormal = attributes.getColor(R.styleable.CustomButton_cb_text_color, secondaryColor);
+            textColorPressed = attributes.getColor(R.styleable.CustomButton_cb_text_color_pressed, primaryColor);
+            textColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_text_color_disabled, primaryColor);
             textColorState = attributes.getColorStateList(R.styleable.CustomButton_android_textColor);
             textSize = attributes.getDimension(R.styleable.CustomButton_cb_text_size, 0);
             text = attributes.getString(R.styleable.CustomButton_android_text);
@@ -132,9 +145,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
             shapeRadius = attributes.getDimension(R.styleable.CustomButton_cb_shape_radius, 0);
             shapeTypeAttr = attributes.getInt(R.styleable.CustomButton_cb_shape_type, 0);
-            frameColorNormal = attributes.getColor(R.styleable.CustomButton_cb_frame_color, 0);
-            frameColorPressed = attributes.getColor(R.styleable.CustomButton_cb_frame_color_pressed, frameColorNormal);
-            frameColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_frame_color_disabled, frameColorNormal);
+            frameColorNormal = attributes.getColor(R.styleable.CustomButton_cb_frame_color, secondaryColor);
+            frameColorPressed = attributes.getColor(R.styleable.CustomButton_cb_frame_color_pressed, primaryColor);
+            frameColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_frame_color_disabled, primaryColor);
             frameColorState = attributes.getColorStateList(R.styleable.CustomButton_cb_frame_state_list);
             frameSize = attributes.getDimension(R.styleable.CustomButton_cb_frame_size, 0);
 
@@ -187,7 +200,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                     break;
             }
 
-            setContent(context);
+            setContent();
 
             shapeType = (shapeTypeAttr == 0) ? GradientDrawable.RECTANGLE : GradientDrawable.OVAL; // convert xml attributes value to shape type constant
 
@@ -213,7 +226,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         container.setEnabled(enabled);
     }
 
-    private void setContent(Context context) {
+    private void setContent() {
         removeAllViews();
         container.removeAllViews();
 
@@ -291,15 +304,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
         addView(container);
 
-        textColorArray = new int[]{textColorPressed, textColorNormal, textColorDisabled};
-        textColorList = new ColorStateList(stateArray, textColorArray);
-
-        if (text != null) {
-            textView.setText(text);
-            if (textSize > 0) textView.setTextSize(textSize);
-            if (textColorNormal != 0) textView.setTextColor(textColorList);
-            else if (textColorState != null) textView.setTextColor(textColorState);
-        }
+        updateText();
     }
 
     /**
@@ -380,6 +385,46 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         frameColorDisabled = globalColor;
     }
 
+    private void updateText() {
+        textColorArray = new int[]{textColorPressed, textColorNormal, textColorDisabled};
+        textColorList = new ColorStateList(stateArray, textColorArray);
+
+        if (text != null) {
+            textView.setText(text);
+            if (textSize > 0) textView.setTextSize(textSize);
+            if (textColorNormal != 0) textView.setTextColor(textColorList);
+            else if (textColorState != null) textView.setTextColor(textColorState);
+        } else {
+            container.removeView(textView);
+        }
+    }
+
+    private void updatePrimaryColor(int color) {
+
+        this.primaryColor = color;
+
+        this.backgroundColorNormal = color;
+
+        this.textColorDisabled = color;
+        this.textColorPressed = color;
+
+        this.frameColorPressed = color;
+        this.frameColorDisabled = color;
+    }
+
+    private void updateSecondaryColor(int color) {
+
+        this.secondaryColor = color;
+
+        this.backgroundColorPressed = color;
+        this.backgroundColorDisabled = color;
+
+        this.textColorNormal = color;
+
+        this.frameColorNormal = color;
+    }
+
+
     /**
      * Set shape backgroundColorNormal.
      *
@@ -389,6 +434,32 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     public void setShapeBackground(int shapeType, int shapeRadius) {
         this.shapeType = shapeType;
         this.shapeRadius = shapeRadius;
+        setShapeBackground();
+    }
+
+
+    public void setPrimaryColor(int color) {
+
+        updatePrimaryColor(color);
+
+        updateText();
+        setShapeBackground();
+    }
+
+    public void setSecondaryColor(int color) {
+
+        updateSecondaryColor(color);
+
+        updateText();
+        setShapeBackground();
+    }
+
+    public void setMainColors(int primaryColor, int secondaryColor) {
+
+        updatePrimaryColor(primaryColor);
+        updateSecondaryColor(secondaryColor);
+
+        updateText();
         setShapeBackground();
     }
 
@@ -507,7 +578,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.text = text;
         textView.setText(text);
         if (textView.getParent() != container) {
-            setContent(getContext());
+            setContent();
         }
     }
 
@@ -605,7 +676,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.imageWeight = weight;
         this.imagePaddingArray = padding;
 
-        setContent(getContext());
+        setContent();
     }
 
     /**
@@ -629,7 +700,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         if (scaleType != null)
             imageContainer.setScaleType(scaleType);
 
-        setContent(getContext());
+        setContent();
     }
 
     /**
@@ -797,4 +868,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return textWeight;
     }
 
+    public int getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public int getSecondaryColor() {
+        return secondaryColor;
+    }
 }

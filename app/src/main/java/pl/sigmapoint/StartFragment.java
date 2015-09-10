@@ -99,7 +99,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         array[CustomButton.RIGHT] = "Right";
         array[CustomButton.BOTTOM] = "Bottom";
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, array);
         iconPositionS.setAdapter(adapter);
 
         colorPickerDialog = new AmbilWarnaDialog(getActivity(), Color.WHITE, new AmbilWarnaDialog.OnAmbilWarnaListener() {
