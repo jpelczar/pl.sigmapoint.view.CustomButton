@@ -23,6 +23,7 @@ import android.widget.TextView;
  */
 public class CustomButton extends LinearLayout implements View.OnClickListener {
 
+    //WARNING: If you want to change it, you should change it in attr xml too.
     public static final int LEFT = 0;
     public static final int TOP = 1;
     public static final int RIGHT = 2;
@@ -92,7 +93,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         shapeRadius = 0;
         imageScaleType = ImageView.ScaleType.FIT_CENTER;
 
-        if (drawableNormal != null) drawablePosition = LEFT;
+        if (drawableNormal != null) drawablePosition = LEFT; //default position
         else drawablePosition = -1;
 
         setContent(context);
@@ -226,26 +227,17 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setTextPadding(textPaddingArray);
 
         LayoutParams layoutParamsText;
-        LayoutParams layoutParamsImage = null;
-        if (drawablePosition >= 0 || drawablePosition <= 3) {
-            layoutParamsText = new LinearLayout.LayoutParams((drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT, (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0);
-            layoutParamsImage = new LinearLayout.LayoutParams((drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT, (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0);
+        LayoutParams layoutParamsImage;
+        if (drawablePosition >= 0 || drawablePosition <= 3 || drawableNormal != null) {
+            int width = (drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
+            layoutParamsText = new LinearLayout.LayoutParams(width, height);
+            layoutParamsImage = new LinearLayout.LayoutParams(width, height);
             layoutParamsText.weight = (text != null) ? ((textWeight == 0) ? 1 : textWeight) : 0;
             textWeight = (int) layoutParamsText.weight;
-            layoutParamsImage.weight = (drawableNormal != null) ? ((imageWeight == 0) ? 1 : imageWeight) : 0;
+            layoutParamsImage.weight = (imageWeight == 0) ? 1 : imageWeight;
             imageWeight = (int) layoutParamsImage.weight;
-        } else {
-            layoutParamsText = new LinearLayout.LayoutParams(getLayoutParams().width, getLayoutParams().height);
-        }
-
-        textView.setLayoutParams(layoutParamsText);
-
-        if (drawablePosition < 0 || drawablePosition > 3 || drawableNormal == null) {
-            if (text != null) {
-                textView.setGravity(Gravity.CENTER);
-                container.addView(textView);
-            }
-        } else {
+            textView.setLayoutParams(layoutParamsText);
             imageContainer.setLayoutParams(layoutParamsImage);
 
             if (drawablePressed == null) drawablePressed = drawableNormal;
@@ -286,6 +278,14 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                 case BOTTOM:
                     container.addView(imageContainer);
                     break;
+            }
+
+        } else {
+            layoutParamsText = new LinearLayout.LayoutParams(getLayoutParams().width, getLayoutParams().height);
+            textView.setLayoutParams(layoutParamsText);
+            if (text != null) {
+                textView.setGravity(Gravity.CENTER);
+                container.addView(textView);
             }
         }
 
