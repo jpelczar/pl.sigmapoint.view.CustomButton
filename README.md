@@ -51,6 +51,10 @@ cb_image - image source {format - drawable or color} <br>
 cb_image_normal - normal state image source (if you choose cb_image, it will be override) {format - drawable or color} <br>
 cb_image_disabled - disabled state image source (if you choose cb_image, it will be override) {format - drawable or color} <br>
 cb_image_pressed - pressed state image source (if you choose cb_image, it will be override) {format - drawable or color} <br>
+cb_image_color_normal - only for image {format - color} <br>
+cb_image_color_pressed - only for image {format - color} <br>
+cb_image_color_disable - only for image {format - color} <br>
+cb_image_color_list - only for image {format - colorStateList} <br>
 cb_image_padding - {format - dimension} <br>
 cb_image_padding_left - {format - dimension} <br>
 cb_image_padding_top - {format - dimension} <br>
@@ -89,6 +93,10 @@ setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, Cust
 setTextParams(int weight, int[] padding)
 setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding)
 setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding)
+setImageColors(int nomal, int pressed, int disabled)
+setImageNormalColor(int color)
+setImagePressedColor(int color)
+setImageDisableColor(int color)
 setElevationEnabled(boolean enabled) 
 and evry XML tag have getter
 ```
