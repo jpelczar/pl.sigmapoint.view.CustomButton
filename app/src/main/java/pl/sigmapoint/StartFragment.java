@@ -165,6 +165,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 bgColorDisabledCB.setEnabled(isChecked);
                 txtColorDisabledCB.setEnabled(isChecked);
                 frameColorDisabledCB.setEnabled(isChecked);
+                generateCB.setEnabled(isChecked);
             }
         });
     }
