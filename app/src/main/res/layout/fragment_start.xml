@@ -313,6 +313,9 @@
         android:padding="2dp"
         android:text="@string/generate"
         app:cb_frame_size="5dp"
+        app:cb_image="@drawable/ic_owl"
+        app:cb_image_padding="6dp"
+        app:cb_image_position="left"
         app:cb_primary_color="@color/blue_normal"
         app:cb_secondary_color="@color/red_normal"
         app:cb_shape_radius="5dp" />

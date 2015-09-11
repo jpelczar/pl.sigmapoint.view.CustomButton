@@ -46,6 +46,10 @@
         <attr name="cb_image_normal" format="reference" />
         <attr name="cb_image_disabled" format="reference" />
         <attr name="cb_image_pressed" format="reference" />
+        <attr name="cb_image_color_normal" format="color" />
+        <attr name="cb_image_color_pressed" format="color" />
+        <attr name="cb_image_color_disabled" format="color" />
+        <attr name="cb_image_color_list" format="color" />
         <attr name="cb_image_padding" format="dimension" />
         <attr name="cb_image_padding_left" format="dimension" />
         <attr name="cb_image_padding_top" format="dimension" />
