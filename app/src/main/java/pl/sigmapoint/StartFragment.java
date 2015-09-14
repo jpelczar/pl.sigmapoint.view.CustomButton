@@ -218,7 +218,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
     private void generate() {
         generatedCB = new CustomButton(getActivity(),
-                new ViewGroup.LayoutParams(300, 300),
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200),
                 bgColorNormalCB.getBackgroundColorNormal(),
                 txtColorNormalCB.getTextColorNormal(),
                 null);

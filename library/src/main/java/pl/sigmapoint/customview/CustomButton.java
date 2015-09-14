@@ -275,13 +275,18 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             int width = (drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
             int height = (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
             layoutParamsText = new LinearLayout.LayoutParams(width, height);
-            layoutParamsImage = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParamsImage = new LayoutParams(width, height);
             layoutParamsText.weight = (text != null) ? ((textWeight == 0) ? 1 : textWeight) : 0;
             textWeight = (int) layoutParamsText.weight;
             if (imageWeight > 0) {
                 layoutParamsImage = new LinearLayout.LayoutParams(width, height);
                 layoutParamsImage.weight = imageWeight;
                 imageWeight = (int) layoutParamsImage.weight;
+            } else {
+                if (text == null) {
+                    layoutParamsImage.weight = imageWeight;
+                    imageWeight = (int) layoutParamsImage.weight;
+                }
             }
             textView.setLayoutParams(layoutParamsText);
             imageContainer.setLayoutParams(layoutParamsImage);
@@ -516,6 +521,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                                 ((LayoutParams) textView.getLayoutParams()).rightMargin = layoutParams.width;
                             else
                                 ((LayoutParams) textView.getLayoutParams()).leftMargin = layoutParams.width;
+                        }
+                        if (text == null) {
+                            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            layoutParams.width = 0;
+                            layoutParams.weight = 1;
+                            imageWeight = 1;
                         }
                     } else {
                         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
