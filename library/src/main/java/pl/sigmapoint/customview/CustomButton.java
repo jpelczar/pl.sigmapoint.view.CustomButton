@@ -267,7 +267,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
         LayoutParams layoutParamsText;
         LayoutParams layoutParamsImage;
-        if (drawablePosition >= 0 || drawablePosition <= 3 || drawableNormal != null) {
+        if (drawablePosition >= 0 || drawablePosition <= 3 && drawableNormal != null) {
             int width = (drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
             int height = (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
             layoutParamsText = new LinearLayout.LayoutParams(width, height);
@@ -279,8 +279,10 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             textView.setLayoutParams(layoutParamsText);
             imageContainer.setLayoutParams(layoutParamsImage);
 
-            if (drawablePressed == null) drawablePressed = drawableNormal;
-            if (drawableDisabled == null) drawablePressed = drawableNormal;
+            if (drawablePressed == null)
+                drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
+            if (drawableDisabled == null)
+                drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
 
             StateListDrawable listDrawable = new StateListDrawable();
             listDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
@@ -320,7 +322,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             }
 
         } else {
-            layoutParamsText = new LinearLayout.LayoutParams(getLayoutParams().width, getLayoutParams().height);
+            layoutParamsText = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(layoutParamsText);
             if (text != null) {
                 textView.setGravity(Gravity.CENTER);
@@ -420,7 +422,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         drawableColorDisabled = globalColor;
     }
 
-
     private void updateText() {
         textColorArray = new int[]{textColorPressed, textColorNormal, textColorDisabled};
         textColorList = new ColorStateList(stateArray, textColorArray);
@@ -500,7 +501,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return new BitmapDrawable(b);
     }
 
-
     /**
      * Set shape backgroundColorNormal.
      *
@@ -512,7 +512,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.shapeRadius = shapeRadius;
         setShapeBackground();
     }
-
 
     public void setPrimaryColor(int color) {
 
@@ -548,7 +547,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      *                       pressed - for pressed state,
      *                       (empty) - for disabled state.
      */
-
     public void setBackgroundColorStateList(ColorStateList colorStateList) {
 
         backgroundColorStateListToIntegers(colorStateList);
@@ -583,7 +581,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param color Integer frame color
      * @param size  Float frame size
      */
-
     public void setFrame(int color, float size) {
         frameSize = size;
         frameColorNormal = color;
@@ -752,6 +749,13 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.imageWeight = weight;
         this.imagePaddingArray = padding;
 
+        if (padding != null)
+            imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+        else
+            imageContainer.setPadding(0, 0, 0, 0);
+        if (scaleType != null)
+            imageContainer.setScaleType(scaleType);
+
         setContent();
     }
 
@@ -764,19 +768,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param padding   4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
      */
     public void setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding) {
-        this.drawableNormal = drawable;
-        this.drawablePosition = position;
-        this.imageWeight = weight;
-        this.imagePaddingArray = padding;
-
-        if (padding != null)
-            imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
-        else
-            imageContainer.setPadding(0, 0, 0, 0);
-        if (scaleType != null)
-            imageContainer.setScaleType(scaleType);
-
-        setContent();
+        setImage(position, drawable, drawable, drawable, scaleType, weight, padding);
     }
 
     public void setImageColors(int normal, int pressed, int disabled) {
@@ -811,7 +803,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setImageColorStateList();
         setContent();
     }
-
 
     /**
      * Set elevation to button. If enabled button is smaller because shadow must have space to show.
@@ -852,7 +843,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     public int getShapeType() {
         return shapeType;
     }
-
 
     public boolean isElevationEnabled() {
         return isElevationEnabled;
