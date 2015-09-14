@@ -92,6 +92,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         enableTB = (ToggleButton) view.findViewById(R.id.enable);
 
         enableTB.setChecked(true);
+        generateCB.setImageColors(Color.CYAN, Color.GREEN, Color.MAGENTA);
 
         array = new String[4];
         array[CustomButton.LEFT] = "Left";
@@ -99,7 +100,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         array[CustomButton.RIGHT] = "Right";
         array[CustomButton.BOTTOM] = "Bottom";
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, array);
         iconPositionS.setAdapter(adapter);
 
         colorPickerDialog = new AmbilWarnaDialog(getActivity(), Color.WHITE, new AmbilWarnaDialog.OnAmbilWarnaListener() {
@@ -165,6 +166,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 bgColorDisabledCB.setEnabled(isChecked);
                 txtColorDisabledCB.setEnabled(isChecked);
                 frameColorDisabledCB.setEnabled(isChecked);
+                generateCB.setEnabled(isChecked);
             }
         });
     }
@@ -241,7 +243,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                     break;
                 }
             }
-            generatedCB.setImage(position, getResources().getDrawable(R.drawable.ic_owl), ImageView.ScaleType.FIT_CENTER, 1, null);
+            generatedCB.setImage(position, getResources().getDrawable(R.drawable.ic_owl), ImageView.ScaleType.FIT_CENTER, 0, null);
         }
         generatedCB.setElevationEnabled(elevationTB.isChecked());
         if (getActivity() instanceof MainActivity) {

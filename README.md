@@ -7,18 +7,22 @@ Then select library folder from project. And start use. </p>
 <p> >=API 8 </p>
 
 <h2> Reference </h2>
+<p> Default image position is left and centered text in button. When image is bigger than half of width, weight automatically is setting to 1. <br>
+Only when image is in horizontal position text can be center.  </p>
 <h3> XML tag's </h3>
 
 This is the base tag of CustomButton:<br>
 ```xml
-<pl.sigmapoint.customview.CustomButton<br>
+<pl.sigmapoint.customview.CustomButton
      android:id="@+id/sigmapoint_button"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:text="text"/>
 ```
-<p> You can specify the following things:<br>
-cb_background - background color of normal button  {format - color} - recommended <br>
+<p> You can specify the following things:
+cb_primary_color - \/
+cb_secondary_color - you can specify only two colors for all button. But it will be override by background, text, frame color. {format - color} <br>
+cb_background - background color of normal button  {format - color} <br>
 cb_background_pressed - background color of pressed button {format - color} <br>
 cb_background_disabled - background color of disabled button {format - color} <br>
 cb_background_state_list - {format - ColorStateList} <br>
@@ -33,6 +37,7 @@ cb_text_padding_top - {format - dimension} <br>
 cb_text_padding_right - {format - dimension} <br>
 cb_text_padding_bottom - {format - dimension} <br>
 cb_text_weight - {format - integer} <br>
+cb_text_center or android:textAlignment - only works when image weight doesn't specify. Center text in button. {format - boolean or only "center" value} <br>
 <br>
 cb_shape_radius - corner radius {format - dimension}<br>
 cb_shape_type - shape type, you can choose: rect or oval <br>
@@ -49,6 +54,10 @@ cb_image - image source {format - drawable or color} <br>
 cb_image_normal - normal state image source (if you choose cb_image, it will be override) {format - drawable or color} <br>
 cb_image_disabled - disabled state image source (if you choose cb_image, it will be override) {format - drawable or color} <br>
 cb_image_pressed - pressed state image source (if you choose cb_image, it will be override) {format - drawable or color} <br>
+cb_image_color_normal - only for image {format - color} <br>
+cb_image_color_pressed - only for image {format - color} <br>
+cb_image_color_disable - only for image {format - color} <br>
+cb_image_color_list - only for image {format - colorStateList} <br>
 cb_image_padding - {format - dimension} <br>
 cb_image_padding_left - {format - dimension} <br>
 cb_image_padding_top - {format - dimension} <br>
@@ -58,7 +67,10 @@ cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start
 cb_image_weight - {format - integer} </p>
 <h3> Java Code </h3>
 ```java
-CustomButton(Context context, LayoutParams layoutParams, int backgroundColor, int textColor, Drawable icon)
+CustomButton(Context context, LayoutParams layoutParams, int primaryColor, int secondaryColor, Drawable icon)
+setPrimaryColor(int color)
+setSecondaryColor(int color)
+setMainColors(int primaryColor, int secondaryColor)
 setShapeBackground(int shapeType, int shapeRadius)
 setBackgroundColorStateList(ColorStateList colorStateList)
 setBackgroundColor(int color)
@@ -74,6 +86,7 @@ setFrameColorDisabled(int color)
 setFrameSize(float frameSize)
 removeFrame() 
 setText(String text)
+setTextCenter(boolean center)
 setTextColor(int color)
 setTextColorNormal(int color)
 setTextColorPressed(int color)
@@ -84,6 +97,10 @@ setTextPadding(int[] padding) - int[4]{CustomButton.LEFT, CustomButton.TOP, Cust
 setTextParams(int weight, int[] padding)
 setImage(int position, Drawable drawableNormal, Drawable drawablePressed, Drawable drawableDisabled, ImageView.ScaleType scaleType, int weight, int[] padding)
 setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding)
+setImageColors(int nomal, int pressed, int disabled)
+setImageNormalColor(int color)
+setImagePressedColor(int color)
+setImageDisableColor(int color)
 setElevationEnabled(boolean enabled) 
 and evry XML tag have getter
 ```

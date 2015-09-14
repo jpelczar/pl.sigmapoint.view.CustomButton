@@ -4,6 +4,15 @@ import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -14,6 +23,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,12 +42,14 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     private final int COLOR_INDEX_PRESSED = 0;
     private final int COLOR_INDEX_NORMAL = 1;
     private final int COLOR_INDEX_DISABLED = 2;
-    private final int[][] stateArray = new int[][]{new int[]{android.R.attr.state_pressed}, new int[]{android.R.attr.state_enabled}, new int[]{}}; //array for support states
+    private final int[][] stateArray = new int[][]{new int[]{android.R.attr.state_pressed}, new int[]{android.R.attr.state_enabled}, new int[]{}}; //array for support states DON'T TOUCH THIS
 
     protected TextView textView; //text container
     protected LinearLayout container; //all content container
     protected ImageView imageContainer;
 
+    private int primaryColor, secondaryColor;
+    private int primaryColorLight, secondaryColorLight;
     private int backgroundColorPressed, backgroundColorDisabled, backgroundColorNormal; // colors for each backgroundColorNormal state
     private ColorStateList backgroundColorState; // color state list for backgroundColorNormal
     private int textColorPressed, textColorDisabled, textColorNormal; // colors for each text color state
@@ -54,6 +66,8 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     private float frameSize; // frame size
     private boolean isElevationEnabled; // is elevation should be displayed >=API 21
     private Drawable drawableNormal, drawableDisabled, drawablePressed;
+    private int drawableColorNormal, drawableColorDisabled, drawableColorPressed;
+    private ColorStateList drawableColorStateListAttr;
     private int drawablePosition;
     private int imagePadding;
     private int[] imagePaddingArray;
@@ -74,29 +88,28 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         imageContainer = new ImageView(context);
     }
 
-    public CustomButton(Context context, ViewGroup.LayoutParams params, int backgroundColorNormal, int textColorNormal, Drawable imageNormal) {
+    public CustomButton(Context context, ViewGroup.LayoutParams params, int primaryColor, int secondaryColor, Drawable imageNormal) {
         super(context);
         init(context);
         setLayoutParams(params);
 
-        this.backgroundColorNormal = backgroundColorNormal;
-        this.textColorNormal = textColorNormal;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+
         this.drawableNormal = imageNormal;
 
-        this.backgroundColorPressed = backgroundColorNormal;
-        this.backgroundColorDisabled = backgroundColorNormal;
+        updatePrimaryColor(primaryColor);
+        updateSecondaryColor(secondaryColor);
 
-        this.textColorDisabled = textColorNormal;
-        this.textColorPressed = textColorNormal;
+        this.shapeType = 0;
+        this.shapeRadius = 0;
+        this.imageScaleType = ImageView.ScaleType.FIT_CENTER;
 
-        shapeType = 0;
-        shapeRadius = 0;
-        imageScaleType = ImageView.ScaleType.FIT_CENTER;
-
-        if (drawableNormal != null) drawablePosition = LEFT; //default position
+        if (drawableNormal != null) this.drawablePosition = LEFT; //default position
         else drawablePosition = -1;
 
-        setContent(context);
+        setContent();
+        setButtonLayoutParams();
 
         setShapeBackground(); // set shape and backgroundColorNormal to button
         setElevationEnabled(true); // this method will work only for post-L android. Set elevation or disable it and set margins if needed
@@ -112,14 +125,18 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomButton, 0, 0);
 
         try {
-            backgroundColorNormal = attributes.getColor(R.styleable.CustomButton_cb_background, 0);
-            backgroundColorPressed = attributes.getColor(R.styleable.CustomButton_cb_background_pressed, backgroundColorNormal);
-            backgroundColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_background_disabled, backgroundColorNormal);
+
+            primaryColor = attributes.getColor(R.styleable.CustomButton_cb_primary_color, Color.LTGRAY);
+            secondaryColor = attributes.getColor(R.styleable.CustomButton_cb_secondary_color, Color.GRAY);
+
+            backgroundColorNormal = attributes.getColor(R.styleable.CustomButton_cb_background, primaryColor);
+            backgroundColorPressed = attributes.getColor(R.styleable.CustomButton_cb_background_pressed, secondaryColor);
+            backgroundColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_background_disabled, lighterColor(primaryColor));
             backgroundColorState = attributes.getColorStateList(R.styleable.CustomButton_cb_background_state_list);
 
-            textColorNormal = attributes.getColor(R.styleable.CustomButton_cb_text_color, 0);
-            textColorPressed = attributes.getColor(R.styleable.CustomButton_cb_text_color_pressed, textColorNormal);
-            textColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_text_color_disabled, textColorNormal);
+            textColorNormal = attributes.getColor(R.styleable.CustomButton_cb_text_color, secondaryColor);
+            textColorPressed = attributes.getColor(R.styleable.CustomButton_cb_text_color_pressed, primaryColor);
+            textColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_text_color_disabled, lighterColor(secondaryColor));
             textColorState = attributes.getColorStateList(R.styleable.CustomButton_android_textColor);
             textSize = attributes.getDimension(R.styleable.CustomButton_cb_text_size, 0);
             text = attributes.getString(R.styleable.CustomButton_android_text);
@@ -132,9 +149,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
             shapeRadius = attributes.getDimension(R.styleable.CustomButton_cb_shape_radius, 0);
             shapeTypeAttr = attributes.getInt(R.styleable.CustomButton_cb_shape_type, 0);
-            frameColorNormal = attributes.getColor(R.styleable.CustomButton_cb_frame_color, 0);
-            frameColorPressed = attributes.getColor(R.styleable.CustomButton_cb_frame_color_pressed, frameColorNormal);
-            frameColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_frame_color_disabled, frameColorNormal);
+            frameColorNormal = attributes.getColor(R.styleable.CustomButton_cb_frame_color, secondaryColor);
+            frameColorPressed = attributes.getColor(R.styleable.CustomButton_cb_frame_color_pressed, primaryColor);
+            frameColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_frame_color_disabled, lighterColor(secondaryColor));
             frameColorState = attributes.getColorStateList(R.styleable.CustomButton_cb_frame_state_list);
             frameSize = attributes.getDimension(R.styleable.CustomButton_cb_frame_size, 0);
 
@@ -146,13 +163,17 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                 drawableNormal = attributes.getDrawable(R.styleable.CustomButton_cb_image_normal);
             drawablePressed = attributes.getDrawable(R.styleable.CustomButton_cb_image_pressed);
             drawableDisabled = attributes.getDrawable(R.styleable.CustomButton_cb_image_disabled);
+            drawableColorStateListAttr = attributes.getColorStateList(R.styleable.CustomButton_cb_image_color_list);
+            drawableColorNormal = attributes.getColor(R.styleable.CustomButton_cb_image_color_normal, Integer.MAX_VALUE);
+            drawableColorPressed = attributes.getColor(R.styleable.CustomButton_cb_image_color_pressed, Integer.MAX_VALUE);
+            drawableColorDisabled = attributes.getColor(R.styleable.CustomButton_cb_image_color_disabled, Integer.MAX_VALUE);
             imageScaleTypeAttr = attributes.getInteger(R.styleable.CustomButton_cb_image_scale_type, 3);
             imagePadding = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding, 0);
             imagePaddingArray[LEFT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_left, imagePadding);
             imagePaddingArray[TOP] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_top, imagePadding);
             imagePaddingArray[RIGHT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_right, imagePadding);
             imagePaddingArray[BOTTOM] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_bottom, imagePadding);
-            imageWeight = attributes.getInteger(R.styleable.CustomButton_cb_image_weight, 1);
+            imageWeight = attributes.getInteger(R.styleable.CustomButton_cb_image_weight, 0);
 
             if (backgroundColorState != null) { // if backgroundColorNormal state is not null the set color from color state list to specific colors
                 backgroundColorStateListToIntegers(backgroundColorState);
@@ -160,6 +181,25 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
             if (frameColorState != null) { // if frame state is not null the set color from color state list to specific colors
                 frameColorStateListToIntegers(frameColorState);
+            }
+
+            if (drawableColorStateListAttr != null)
+                imageColorStateListToIntegers(drawableColorStateListAttr);
+            setImageColorStateList();
+            if (drawableNormal != null) {
+                if (drawableColorNormal != Integer.MAX_VALUE) {
+                    drawableNormal = changeDrawableColor(((BitmapDrawable) drawableNormal).getBitmap(), drawableColorNormal);
+                }
+                if (drawableColorPressed != Integer.MAX_VALUE) {
+                    if (drawablePressed == null)
+                        drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
+                    drawablePressed = changeDrawableColor(((BitmapDrawable) drawablePressed).getBitmap(), drawableColorPressed);
+                }
+                if (drawableColorDisabled != Integer.MAX_VALUE) {
+                    if (drawableDisabled == null)
+                        drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
+                    drawableDisabled = changeDrawableColor(((BitmapDrawable) drawableDisabled).getBitmap(), drawableColorDisabled);
+                }
             }
 
             //WARNING: If you want to change it, you should change it in attr xml too
@@ -187,7 +227,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                     break;
             }
 
-            setContent(context);
+            setContent();
 
             shapeType = (shapeTypeAttr == 0) ? GradientDrawable.RECTANGLE : GradientDrawable.OVAL; // convert xml attributes value to shape type constant
 
@@ -199,6 +239,8 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         }
 
         setOnClickListener(this);
+
+        setButtonLayoutParams();
     }
 
     @Override
@@ -211,9 +253,10 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         super.setEnabled(enabled);
         textView.setEnabled(enabled); //chain child views with parent state
         container.setEnabled(enabled);
+        imageContainer.setEnabled(enabled);
     }
 
-    private void setContent(Context context) {
+    private void setContent() {
         removeAllViews();
         container.removeAllViews();
 
@@ -228,20 +271,25 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
         LayoutParams layoutParamsText;
         LayoutParams layoutParamsImage;
-        if (drawablePosition >= 0 || drawablePosition <= 3 || drawableNormal != null) {
+        if (drawablePosition >= 0 || drawablePosition <= 3 && drawableNormal != null) {
             int width = (drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
             int height = (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
             layoutParamsText = new LinearLayout.LayoutParams(width, height);
-            layoutParamsImage = new LinearLayout.LayoutParams(width, height);
+            layoutParamsImage = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParamsText.weight = (text != null) ? ((textWeight == 0) ? 1 : textWeight) : 0;
             textWeight = (int) layoutParamsText.weight;
-            layoutParamsImage.weight = (imageWeight == 0) ? 1 : imageWeight;
-            imageWeight = (int) layoutParamsImage.weight;
+            if (imageWeight > 0) {
+                layoutParamsImage = new LinearLayout.LayoutParams(width, height);
+                layoutParamsImage.weight = imageWeight;
+                imageWeight = (int) layoutParamsImage.weight;
+            }
             textView.setLayoutParams(layoutParamsText);
             imageContainer.setLayoutParams(layoutParamsImage);
 
-            if (drawablePressed == null) drawablePressed = drawableNormal;
-            if (drawableDisabled == null) drawablePressed = drawableNormal;
+            if (drawablePressed == null)
+                drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
+            if (drawableDisabled == null)
+                drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
 
             StateListDrawable listDrawable = new StateListDrawable();
             listDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
@@ -281,7 +329,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             }
 
         } else {
-            layoutParamsText = new LinearLayout.LayoutParams(getLayoutParams().width, getLayoutParams().height);
+            layoutParamsText = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(layoutParamsText);
             if (text != null) {
                 textView.setGravity(Gravity.CENTER);
@@ -291,15 +339,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
         addView(container);
 
-        textColorArray = new int[]{textColorPressed, textColorNormal, textColorDisabled};
-        textColorList = new ColorStateList(stateArray, textColorArray);
-
-        if (text != null) {
-            textView.setText(text);
-            if (textSize > 0) textView.setTextSize(textSize);
-            if (textColorNormal != 0) textView.setTextColor(textColorList);
-            else if (textColorState != null) textView.setTextColor(textColorState);
-        }
+        updateText();
     }
 
     /**
@@ -380,6 +420,130 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         frameColorDisabled = globalColor;
     }
 
+    private void imageColorStateListToIntegers(ColorStateList colorStateList) {
+
+        int globalColor = colorStateList.getColorForState(new int[]{}, 0);
+
+        drawableColorPressed = colorStateList.getColorForState(new int[]{android.R.attr.state_pressed}, globalColor);
+        drawableColorNormal = colorStateList.getColorForState(new int[]{android.R.attr.state_enabled}, globalColor);
+        drawableColorDisabled = globalColor;
+    }
+
+    private void updateText() {
+        textColorArray = new int[]{textColorPressed, textColorNormal, textColorDisabled};
+        textColorList = new ColorStateList(stateArray, textColorArray);
+
+        if (text != null) {
+            textView.setText(text);
+            if (textSize > 0) textView.setTextSize(textSize);
+            if (textColorNormal != 0) textView.setTextColor(textColorList);
+            else if (textColorState != null) textView.setTextColor(textColorState);
+        } else {
+            container.removeView(textView);
+        }
+    }
+
+    private void updatePrimaryColor(int color) {
+
+        this.primaryColor = color;
+        this.primaryColorLight = lighterColor(color);
+
+        this.backgroundColorNormal = color;
+        this.textColorPressed = color;
+        this.frameColorPressed = color;
+        this.textColorDisabled = primaryColorLight;
+        this.frameColorDisabled = primaryColorLight;
+    }
+
+    private void updateSecondaryColor(int color) {
+
+        this.secondaryColor = color;
+        this.secondaryColorLight = lighterColor(color);
+
+        this.backgroundColorPressed = color;
+        this.textColorNormal = color;
+        this.frameColorNormal = color;
+        this.backgroundColorDisabled = secondaryColorLight;
+    }
+
+    private int lighterColor(int color) {
+
+        int redPC = Color.red(color);
+        int greenPC = Color.green(color);
+        int blueRC = Color.blue(color);
+        float hsv[] = new float[3];
+
+        Color.RGBToHSV(redPC, greenPC, blueRC, hsv);
+        hsv[1] = (hsv[1] - 0.3f) < 0 ? 0.1f : hsv[1] - 0.3f;
+        return Color.HSVToColor(hsv);
+    }
+
+    private void setImageColorStateList() {
+        if (drawableNormal != null) {
+            if (drawableColorNormal != Integer.MAX_VALUE) {
+                drawableNormal = changeDrawableColor(((BitmapDrawable) drawableNormal).getBitmap(), drawableColorNormal);
+            }
+            if (drawableColorPressed != Integer.MAX_VALUE) {
+                if (drawablePressed == null)
+                    drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
+                drawablePressed = changeDrawableColor(((BitmapDrawable) drawablePressed).getBitmap(), drawableColorPressed);
+            }
+            if (drawableColorDisabled != Integer.MAX_VALUE) {
+                if (drawableDisabled == null)
+                    drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
+                drawableDisabled = changeDrawableColor(((BitmapDrawable) drawableDisabled).getBitmap(), drawableColorDisabled);
+            }
+        }
+    }
+
+    private void setButtonLayoutParams() {
+        if (drawableNormal != null && imageWeight == 0)
+            getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    LayoutParams layoutParams = (LayoutParams) imageContainer.getLayoutParams();
+                    float scale;
+                    if (drawablePosition == LEFT || drawablePosition == RIGHT) {
+                        scale = ((float) container.getHeight()) / ((float) drawableNormal.getIntrinsicHeight());
+                        layoutParams.width = (int) (scale * drawableNormal.getIntrinsicWidth());
+                        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        if (layoutParams.width > container.getWidth() / 2) {
+                            layoutParams.width = 0;
+                            layoutParams.weight = 1;
+                            imageWeight = 1;
+                        } else {
+                            if (drawablePosition == LEFT)
+                                ((LayoutParams) textView.getLayoutParams()).rightMargin = layoutParams.width;
+                            else
+                                ((LayoutParams) textView.getLayoutParams()).leftMargin = layoutParams.width;
+                        }
+                    } else {
+                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        layoutParams.height = 0;
+                        layoutParams.weight = 1;
+                        imageWeight = 1;
+                    }
+                    imageContainer.setLayoutParams(layoutParams);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    else
+                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            });
+    }
+
+    private Drawable changeDrawableColor(Bitmap bitmap, int color) {
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        Paint paint = new Paint();
+        paint.setShader(shader);
+        ColorFilter filter = new LightingColorFilter(color, color);
+        paint.setColorFilter(filter);
+        Bitmap b = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(b);
+        canvas.drawPaint(paint);
+        return new BitmapDrawable(b);
+    }
+
     /**
      * Set shape backgroundColorNormal.
      *
@@ -392,6 +556,31 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
+    public void setPrimaryColor(int color) {
+
+        updatePrimaryColor(color);
+
+        updateText();
+        setShapeBackground();
+    }
+
+    public void setSecondaryColor(int color) {
+
+        updateSecondaryColor(color);
+
+        updateText();
+        setShapeBackground();
+    }
+
+    public void setMainColors(int primaryColor, int secondaryColor) {
+
+        updatePrimaryColor(primaryColor);
+        updateSecondaryColor(secondaryColor);
+
+        updateText();
+        setShapeBackground();
+    }
+
     /**
      * Set background color from color state list.
      * Only three states are use: disabled, pressed, normal.
@@ -401,7 +590,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      *                       pressed - for pressed state,
      *                       (empty) - for disabled state.
      */
-
     public void setBackgroundColorStateList(ColorStateList colorStateList) {
 
         backgroundColorStateListToIntegers(colorStateList);
@@ -436,7 +624,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param color Integer frame color
      * @param size  Float frame size
      */
-
     public void setFrame(int color, float size) {
         frameSize = size;
         frameColorNormal = color;
@@ -507,7 +694,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.text = text;
         textView.setText(text);
         if (textView.getParent() != container) {
-            setContent(getContext());
+            setContent();
         }
     }
 
@@ -605,7 +792,15 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.imageWeight = weight;
         this.imagePaddingArray = padding;
 
-        setContent(getContext());
+        if (padding != null)
+            imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
+        else
+            imageContainer.setPadding(0, 0, 0, 0);
+        if (scaleType != null)
+            imageContainer.setScaleType(scaleType);
+
+        setContent();
+        setButtonLayoutParams();
     }
 
     /**
@@ -617,19 +812,40 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
      * @param padding   4 elements array {CustomButton.LEFT, CustomButton.TOP, CustomButton.RIGHT, CustomButton.BOTTOM}
      */
     public void setImage(int position, Drawable drawable, ImageView.ScaleType scaleType, int weight, int[] padding) {
-        this.drawableNormal = drawable;
-        this.drawablePosition = position;
-        this.imageWeight = weight;
-        this.imagePaddingArray = padding;
+        setImage(position, drawable, drawable, drawable, scaleType, weight, padding);
+    }
 
-        if (padding != null)
-            imageContainer.setPadding(padding[LEFT], padding[TOP], padding[RIGHT], padding[BOTTOM]);
-        else
-            imageContainer.setPadding(0, 0, 0, 0);
-        if (scaleType != null)
-            imageContainer.setScaleType(scaleType);
+    public void setImageColors(int normal, int pressed, int disabled) {
+        this.drawableColorNormal = normal;
+        this.drawableColorPressed = pressed;
+        this.drawableColorDisabled = disabled;
 
-        setContent(getContext());
+        setImageColorStateList();
+        setContent();
+    }
+
+    public void setImageColors(ColorStateList colorStateList) {
+        imageColorStateListToIntegers(colorStateList);
+        setImageColorStateList();
+        setContent();
+    }
+
+    public void setImageNormalColor(int color) {
+        this.drawableColorNormal = color;
+        setImageColorStateList();
+        setContent();
+    }
+
+    public void setImagePressedColor(int color) {
+        this.drawableColorPressed = color;
+        setImageColorStateList();
+        setContent();
+    }
+
+    public void setImageDisableColor(int color) {
+        this.drawableColorDisabled = color;
+        setImageColorStateList();
+        setContent();
     }
 
     /**
@@ -671,7 +887,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     public int getShapeType() {
         return shapeType;
     }
-
 
     public boolean isElevationEnabled() {
         return isElevationEnabled;
@@ -797,4 +1012,23 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return textWeight;
     }
 
+    public int getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public int getSecondaryColor() {
+        return secondaryColor;
+    }
+
+    public int getImageColorNormal() {
+        return drawableColorNormal;
+    }
+
+    public int getImageColorDisabled() {
+        return drawableColorDisabled;
+    }
+
+    public int getImageColorPressed() {
+        return drawableColorPressed;
+    }
 }
