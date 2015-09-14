@@ -23,6 +23,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -108,6 +109,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         else drawablePosition = -1;
 
         setContent();
+        setButtonLayoutParams();
 
         setShapeBackground(); // set shape and backgroundColorNormal to button
         setElevationEnabled(true); // this method will work only for post-L android. Set elevation or disable it and set margins if needed
@@ -171,7 +173,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             imagePaddingArray[TOP] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_top, imagePadding);
             imagePaddingArray[RIGHT] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_right, imagePadding);
             imagePaddingArray[BOTTOM] = (int) attributes.getDimension(R.styleable.CustomButton_cb_image_padding_bottom, imagePadding);
-            imageWeight = attributes.getInteger(R.styleable.CustomButton_cb_image_weight, 1);
+            imageWeight = attributes.getInteger(R.styleable.CustomButton_cb_image_weight, 0);
 
             if (backgroundColorState != null) { // if backgroundColorNormal state is not null the set color from color state list to specific colors
                 backgroundColorStateListToIntegers(backgroundColorState);
@@ -237,6 +239,8 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         }
 
         setOnClickListener(this);
+
+        setButtonLayoutParams();
     }
 
     @Override
@@ -271,11 +275,14 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             int width = (drawablePosition % 2 == 0) ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
             int height = (drawablePosition % 2 == 0) ? ViewGroup.LayoutParams.MATCH_PARENT : 0;
             layoutParamsText = new LinearLayout.LayoutParams(width, height);
-            layoutParamsImage = new LinearLayout.LayoutParams(width, height);
+            layoutParamsImage = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParamsText.weight = (text != null) ? ((textWeight == 0) ? 1 : textWeight) : 0;
             textWeight = (int) layoutParamsText.weight;
-            layoutParamsImage.weight = (imageWeight == 0) ? 1 : imageWeight;
-            imageWeight = (int) layoutParamsImage.weight;
+            if (imageWeight > 0) {
+                layoutParamsImage = new LinearLayout.LayoutParams(width, height);
+                layoutParamsImage.weight = imageWeight;
+                imageWeight = (int) layoutParamsImage.weight;
+            }
             textView.setLayoutParams(layoutParamsText);
             imageContainer.setLayoutParams(layoutParamsImage);
 
@@ -487,6 +494,42 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                 drawableDisabled = changeDrawableColor(((BitmapDrawable) drawableDisabled).getBitmap(), drawableColorDisabled);
             }
         }
+    }
+
+    private void setButtonLayoutParams() {
+        if (drawableNormal != null && imageWeight == 0)
+            getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    LayoutParams layoutParams = (LayoutParams) imageContainer.getLayoutParams();
+                    float scale;
+                    if (drawablePosition == LEFT || drawablePosition == RIGHT) {
+                        scale = ((float) container.getHeight()) / ((float) drawableNormal.getIntrinsicHeight());
+                        layoutParams.width = (int) (scale * drawableNormal.getIntrinsicWidth());
+                        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        if (layoutParams.width > container.getWidth() / 2) {
+                            layoutParams.width = 0;
+                            layoutParams.weight = 1;
+                            imageWeight = 1;
+                        } else {
+                            if (drawablePosition == LEFT)
+                                ((LayoutParams) textView.getLayoutParams()).rightMargin = layoutParams.width;
+                            else
+                                ((LayoutParams) textView.getLayoutParams()).leftMargin = layoutParams.width;
+                        }
+                    } else {
+                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        layoutParams.height = 0;
+                        layoutParams.weight = 1;
+                        imageWeight = 1;
+                    }
+                    imageContainer.setLayoutParams(layoutParams);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    else
+                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            });
     }
 
     private Drawable changeDrawableColor(Bitmap bitmap, int color) {
@@ -757,6 +800,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             imageContainer.setScaleType(scaleType);
 
         setContent();
+        setButtonLayoutParams();
     }
 
     /**

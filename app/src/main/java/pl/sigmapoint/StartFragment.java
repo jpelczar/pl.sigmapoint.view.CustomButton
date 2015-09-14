@@ -243,7 +243,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                     break;
                 }
             }
-            generatedCB.setImage(position, getResources().getDrawable(R.drawable.ic_owl), ImageView.ScaleType.FIT_CENTER, 1, null);
+            generatedCB.setImage(position, getResources().getDrawable(R.drawable.ic_owl), ImageView.ScaleType.FIT_CENTER, 0, null);
         }
         generatedCB.setElevationEnabled(elevationTB.isChecked());
         if (getActivity() instanceof MainActivity) {

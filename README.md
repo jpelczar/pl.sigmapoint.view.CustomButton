@@ -7,17 +7,19 @@ Then select library folder from project. And start use. </p>
 <p> >=API 8 </p>
 
 <h2> Reference </h2>
+<p> Default image position is left and centered text in button. When image is bigger than half of width, weight automatically is setting to 1. <br>
+Only when image is in horizontal position text can be center.  </p>
 <h3> XML tag's </h3>
 
 This is the base tag of CustomButton:<br>
 ```xml
-<pl.sigmapoint.customview.CustomButton<br>
+<pl.sigmapoint.customview.CustomButton
      android:id="@+id/sigmapoint_button"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:text="text"/>
 ```
-<p> You can specify the following things:<br>
+<p> You can specify the following things:
 cb_primary_color - \/
 cb_secondary_color - you can specify only two colors for all button. But it will be override by background, text, frame color. {format - color} <br>
 cb_background - background color of normal button  {format - color} <br>
@@ -35,6 +37,7 @@ cb_text_padding_top - {format - dimension} <br>
 cb_text_padding_right - {format - dimension} <br>
 cb_text_padding_bottom - {format - dimension} <br>
 cb_text_weight - {format - integer} <br>
+cb_text_center or android:textAlignment - only works when image weight doesn't specify. Center text in button. {format - boolean or only "center" value} <br>
 <br>
 cb_shape_radius - corner radius {format - dimension}<br>
 cb_shape_type - shape type, you can choose: rect or oval <br>
@@ -83,6 +86,7 @@ setFrameColorDisabled(int color)
 setFrameSize(float frameSize)
 removeFrame() 
 setText(String text)
+setTextCenter(boolean center)
 setTextColor(int color)
 setTextColorNormal(int color)
 setTextColorPressed(int color)
