@@ -22,7 +22,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StartFragment extends Fragment implements View.OnClickListener {
+public class CreateFragment extends Fragment implements View.OnClickListener {
 
     private final int BG_NORMAL = 0;
     private final int BG_PRESSED = 1;
@@ -51,7 +51,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
     private CustomButton generatedCB;
 
-    public StartFragment() {
+    public CreateFragment() {
         // Required empty public constructor
     }
 

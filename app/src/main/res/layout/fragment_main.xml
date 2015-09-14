@@ -1,0 +1,92 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="pl.sigmapoint.MainFragment">
+
+    <android.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="22" />
+
+    <pl.sigmapoint.customview.CustomButton
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:text="Log in with facebook"
+        app:cb_image="@drawable/ic_facebook"
+        app:cb_image_color_disabled="#c0c0c0"
+        app:cb_image_color_normal="#FFFFFF"
+        app:cb_image_color_pressed="#c4cde0"
+        app:cb_image_padding="5dp"
+        app:cb_image_position="left"
+        app:cb_primary_color="#3B5998"
+        app:cb_secondary_color="#17233c"
+        app:cb_shape_radius="5dp"
+        app:cb_text_color="#FFFFFF" />
+
+    <pl.sigmapoint.customview.CustomButton
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        app:cb_image="@drawable/ic_google"
+        app:cb_image_color_disabled="#c0c0c0"
+        app:cb_image_color_normal="#FFFFFF"
+        app:cb_image_color_pressed="#f1c8c2"
+        app:cb_image_padding="5dp"
+        app:cb_image_position="left"
+        app:cb_primary_color="#d34836"
+        app:cb_secondary_color="#69241b"
+        app:cb_shape_radius="5dp"
+        app:cb_text_color="#FFFFFF" />
+
+    <pl.sigmapoint.customview.CustomButton
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:text="Play Spotify"
+        app:cb_image="@drawable/ic_spotify"
+        app:cb_image_color_disabled="#c0c0c0"
+        app:cb_image_color_normal="#FFFFFF"
+        app:cb_image_color_pressed="#f5fce8"
+        app:cb_image_padding="5dp"
+        app:cb_image_position="right"
+        app:cb_primary_color="#81b71a"
+        app:cb_secondary_color="#527410"
+        app:cb_shape_radius="5dp"
+        app:cb_text_color="#FFFFFF" />
+
+    <pl.sigmapoint.customview.CustomButton
+        android:id="@+id/own"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp"
+        android:text="Create own button"
+        app:cb_image_color_disabled="#c0c0c0"
+        app:cb_image_color_normal="#FFFFFF"
+        app:cb_image_color_pressed="#f1c8c2"
+        app:cb_primary_color="#E33F36"
+        app:cb_secondary_color="#5a1915"
+        app:cb_shape_radius="5dp"
+        app:cb_text_color="#FFFFFF" />
+
+    <android.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="22" />
+
+</LinearLayout>
