@@ -55,7 +55,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     private int textColorPressed, textColorDisabled, textColorNormal; // colors for each text color state
     private ColorStateList textColorState; // color state list for text
     private float textSize;
-    private String text; // text inside button
+    private String text;
     private int textPadding;
     private int[] textPaddingArray;
     private int textWeight;
@@ -63,7 +63,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     private int shapeTypeAttr; // shape type (from xml - converted  to shape type constants)
     private int frameColorPressed, frameColorDisabled, frameColorNormal; // colors for each frame color state
     private ColorStateList frameColorState;
-    private float frameSize; // frame size
+    private float frameSize;
     private boolean isElevationEnabled; // is elevation should be displayed >=API 21
     private Drawable drawableNormal, drawableDisabled, drawablePressed;
     private int drawableColorNormal, drawableColorDisabled, drawableColorPressed;
@@ -86,8 +86,17 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         container = new LinearLayout(context);
         textView = new TextView(context);
         imageContainer = new ImageView(context);
+
+        setGravity(Gravity.TOP);
     }
 
+    /**
+     * @param context        application context
+     * @param params         layout parameters (width, height, weight, etc.)
+     * @param primaryColor   primary color of button
+     * @param secondaryColor secondary color of button
+     * @param imageNormal    can be null if button doesn't have image
+     */
     public CustomButton(Context context, ViewGroup.LayoutParams params, int primaryColor, int secondaryColor, Drawable imageNormal) {
         super(context);
         init(context);
@@ -117,6 +126,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setOnClickListener(this);
     }
 
+    /**
+     * If you use it, you must specify all parameters from setters.
+     *
+     * @param context
+     * @param attrs
+     */
     public CustomButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -183,24 +198,27 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                 frameColorStateListToIntegers(frameColorState);
             }
 
+            if (backgroundColorNormal != primaryColor && backgroundColorPressed == secondaryColor && backgroundColorDisabled == lighterColor(primaryColor)) { //if only normal color is specified
+                backgroundColorPressed = backgroundColorNormal;
+                backgroundColorDisabled = backgroundColorNormal;
+            }
+
+            if (textColorNormal != secondaryColor && textColorPressed == primaryColor && textColorDisabled == lighterColor(secondaryColor)) { //if only normal color is specified
+                textColorPressed = textColorNormal;
+                textColorDisabled = textColorNormal;
+            }
+
+            if (drawableNormal != null) { //if only normal image is specified
+                if (drawablePressed == null)
+                    drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
+                if (drawableDisabled == null)
+                    drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
+            }
+
             if (drawableColorStateListAttr != null)
                 imageColorStateListToIntegers(drawableColorStateListAttr);
-            setImageColorStateList();
-            if (drawableNormal != null) {
-                if (drawableColorNormal != Integer.MAX_VALUE) {
-                    drawableNormal = changeDrawableColor(((BitmapDrawable) drawableNormal).getBitmap(), drawableColorNormal);
-                }
-                if (drawableColorPressed != Integer.MAX_VALUE) {
-                    if (drawablePressed == null)
-                        drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
-                    drawablePressed = changeDrawableColor(((BitmapDrawable) drawablePressed).getBitmap(), drawableColorPressed);
-                }
-                if (drawableColorDisabled != Integer.MAX_VALUE) {
-                    if (drawableDisabled == null)
-                        drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
-                    drawableDisabled = changeDrawableColor(((BitmapDrawable) drawableDisabled).getBitmap(), drawableColorDisabled);
-                }
-            }
+
+            setImageColorStateList(); //works only for images, don't work for shape, etc.
 
             //WARNING: If you want to change it, you should change it in attr xml too
             switch (imageScaleTypeAttr) {
@@ -424,7 +442,14 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         frameColorNormal = colorStateList.getColorForState(new int[]{android.R.attr.state_enabled}, globalColor);
         frameColorDisabled = globalColor;
     }
-
+    /**
+     * Convert color state list to three integers. It is helper method to set image color.
+     *
+     * @param colorStateList is a frame color state list which should be converted. Should have three states:
+     *                       enabled - for normal state,
+     *                       pressed - for pressed state,
+     *                       (empty) - for disabled state.
+     */
     private void imageColorStateListToIntegers(ColorStateList colorStateList) {
 
         int globalColor = colorStateList.getColorForState(new int[]{}, 0);
@@ -434,6 +459,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         drawableColorDisabled = globalColor;
     }
 
+    /**
+     * Update text, color and size. Helper method.
+     */
     private void updateText() {
         textColorArray = new int[]{textColorPressed, textColorNormal, textColorDisabled};
         textColorList = new ColorStateList(stateArray, textColorArray);
@@ -485,17 +513,18 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
     private void setImageColorStateList() {
         if (drawableNormal != null) {
+            if (drawablePressed == null)
+                drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
+            if (drawableDisabled == null)
+                drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
+
             if (drawableColorNormal != Integer.MAX_VALUE) {
                 drawableNormal = changeDrawableColor(((BitmapDrawable) drawableNormal).getBitmap(), drawableColorNormal);
             }
             if (drawableColorPressed != Integer.MAX_VALUE) {
-                if (drawablePressed == null)
-                    drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
                 drawablePressed = changeDrawableColor(((BitmapDrawable) drawablePressed).getBitmap(), drawableColorPressed);
             }
             if (drawableColorDisabled != Integer.MAX_VALUE) {
-                if (drawableDisabled == null)
-                    drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
                 drawableDisabled = changeDrawableColor(((BitmapDrawable) drawableDisabled).getBitmap(), drawableColorDisabled);
             }
         }
@@ -626,6 +655,16 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
 
     public void setBackgroundColorNormal(int backgroundColorNormal) {
         this.backgroundColorNormal = backgroundColorNormal;
+
+        if (backgroundColorPressed == 0 && backgroundColorDisabled == 0) {
+            backgroundColorPressed = backgroundColorNormal;
+            backgroundColorDisabled = backgroundColorNormal;
+        }
+
+        if (textColorPressed == 0 && textColorDisabled == 0) {
+            textColorPressed = textColorNormal;
+            textColorDisabled = textColorNormal;
+        }
         setShapeBackground();
     }
 
@@ -873,7 +912,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             int var;
 
             if (enabled) {
-                var = 6;
+                var = 3;
                 container.setStateListAnimator(AnimatorInflater.loadStateListAnimator(getContext(), R.anim.elevation_button_custom));
             } else {
                 var = 0;

@@ -9,7 +9,7 @@
     <android.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="22" />
+        android:layout_weight="20" />
 
     <pl.sigmapoint.customview.CustomButton
         android:layout_width="match_parent"
@@ -67,26 +67,54 @@
         app:cb_shape_radius="5dp"
         app:cb_text_color="#FFFFFF" />
 
-    <pl.sigmapoint.customview.CustomButton
-        android:id="@+id/own"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="10"
+        android:orientation="horizontal"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="5dp"
-        android:text="Create own button"
-        app:cb_image_color_disabled="#c0c0c0"
-        app:cb_image_color_normal="#FFFFFF"
-        app:cb_image_color_pressed="#f1c8c2"
-        app:cb_primary_color="#E33F36"
-        app:cb_secondary_color="#5a1915"
-        app:cb_shape_radius="5dp"
-        app:cb_text_color="#FFFFFF" />
+        android:paddingTop="5dp">
+
+        <pl.sigmapoint.customview.CustomButton
+            android:id="@+id/own"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingRight="2dp"
+            android:text="Create own button"
+            app:cb_background="@android:color/transparent"
+            app:cb_frame_color="#DBBA23"
+            app:cb_frame_color_disabled="#CFB957"
+            app:cb_frame_color_pressed="#A88D13"
+            app:cb_frame_size="5dp"
+            app:cb_primary_color="#DB433B"
+            app:cb_secondary_color="#E01E14" />
+
+
+        <pl.sigmapoint.customview.CustomButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="2dp"
+            android:text="Remove"
+            app:cb_frame_size="5dp"
+            app:cb_image="@drawable/ic_remove"
+            app:cb_image_color_disabled="#ffffff"
+            app:cb_image_color_normal="#e01e14"
+            app:cb_image_color_pressed="#ffffff"
+            app:cb_image_padding_top="6dp"
+            app:cb_image_position="top"
+            app:cb_primary_color="#FFFFFF"
+            app:cb_secondary_color="#E01E14"
+            app:cb_shape_radius="5dp"
+            app:cb_text_padding_bottom="5dp" />
+
+    </LinearLayout>
 
     <android.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="22" />
+        android:layout_weight="20" />
 
 </LinearLayout>
