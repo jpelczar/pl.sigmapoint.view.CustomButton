@@ -39,7 +39,8 @@ For creating facebook button you must only do this:
 ```
 
 <h2> Reference </h2>
-<p> Default image position is left and centered text in button. When image is bigger than half of width, weight automatically is setting to 1. <br>
+<p> Default image position is left and centered text in button. <br>
+When image is bigger than half of width, weight automatically is setting to 1. <br>
 Only when image is in horizontal position text can be center.  </p>
 <h3> XML tag's </h3>
 
@@ -52,8 +53,9 @@ This is the base tag of CustomButton:<br>
      android:text="text"/>
 ```
 <p> You can specify the following things: <br>
-cb_primary_color - you can specify only two colors for all button. But it will be override by background, text, frame color. {format - color} <br>
-cb_secondary_color - you can specify only two colors for all button. But it will be override by background, text, frame color. {format - color} <br>
+cb_primary_color - you can specify only two colors for all button. This color was set to bacground state normal, <br> 
+frame and text sate pressed. But it will be override by background, text, frame color. {format - color} <br>
+cb_secondary_color - you can specify only two colors for all button. This color was set to bacground state pressed, <br> frame and text state normal. But it will be override by background, text, frame color. {format - color} <br>
 cb_background - background color of normal button  {format - color} <br>
 cb_background_pressed - background color of pressed button {format - color} <br>
 cb_background_disabled - background color of disabled button {format - color} <br>
