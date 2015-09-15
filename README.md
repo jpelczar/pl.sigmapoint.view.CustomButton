@@ -15,7 +15,7 @@ Then select library folder from project. And start use. </p>
 * Drawable color for normal, pressed and disabled state
 * Specify image position and text will be centered with relation to whole button
 
-See below to example: 
+Example: 
 
 ![](https://github.com/Sigmapoint/pl.sigmapoint.view.CustomButton/blob/develop/resources/screen.png)
 
