@@ -442,6 +442,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         frameColorNormal = colorStateList.getColorForState(new int[]{android.R.attr.state_enabled}, globalColor);
         frameColorDisabled = globalColor;
     }
+
     /**
      * Convert color state list to three integers. It is helper method to set image color.
      *
@@ -476,6 +477,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    /**
+     * Update primary color of button. Helper method.
+     *
+     * @param color new primary color
+     */
     private void updatePrimaryColor(int color) {
 
         this.primaryColor = color;
@@ -488,6 +494,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.frameColorDisabled = primaryColorLight;
     }
 
+    /**
+     * Update secondary color of button. Helper method.
+     *
+     * @param color new secondary color
+     */
     private void updateSecondaryColor(int color) {
 
         this.secondaryColor = color;
@@ -499,6 +510,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.backgroundColorDisabled = secondaryColorLight;
     }
 
+    /**
+     * Create lighter color for disabled state. Helper method.
+     *
+     * @param color base color
+     * @return lighter color
+     */
     private int lighterColor(int color) {
 
         int redPC = Color.red(color);
@@ -511,6 +528,10 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return Color.HSVToColor(hsv);
     }
 
+    /**
+     * Set image colors from global values of colors.
+     * Works only with images.
+     */
     private void setImageColorStateList() {
         if (drawableNormal != null) {
             if (drawablePressed == null)
@@ -530,6 +551,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    /**
+     * Helper method for setting image and text in proper position.
+     */
     private void setButtonLayoutParams() {
         if (drawableNormal != null && imageWeight == 0)
             getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -572,6 +596,13 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             });
     }
 
+    /**
+     * Method for coloring drawables. Work only with images.
+     *
+     * @param bitmap
+     * @param color  new color
+     * @return colored drawable
+     */
     private Drawable changeDrawableColor(Bitmap bitmap, int color) {
         BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
         Paint paint = new Paint();
@@ -596,6 +627,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
+    /**
+     * Set primary color of button. Use to background color normal, frame and text color pressed.
+     *
+     * @param color new primary color
+     */
     public void setPrimaryColor(int color) {
 
         updatePrimaryColor(color);
@@ -604,6 +640,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
+    /**
+     * Set secondary color of button. Use to background color pressed, frame and text color normal.
+     *
+     * @param color new secondary color
+     */
     public void setSecondaryColor(int color) {
 
         updateSecondaryColor(color);
@@ -612,6 +653,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
+    /**
+     * Set primary and secondary colors of button.
+     *
+     * @param primaryColor   new primary color
+     * @param secondaryColor new secondary color
+     */
     public void setMainColors(int primaryColor, int secondaryColor) {
 
         updatePrimaryColor(primaryColor);
@@ -636,6 +683,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
+    /**
+     * Set one color for all background state.
+     *
+     * @param color new background color
+     */
     public void setBackgroundColor(int color) {
         this.backgroundColorNormal = color;
         this.backgroundColorDisabled = color;
@@ -713,6 +765,11 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setShapeBackground();
     }
 
+    /**
+     * Set one color for all frame state.
+     *
+     * @param frameColor new frame color
+     */
     public void setFrameColor(int frameColor) {
         this.frameColorNormal = frameColor;
         this.frameColorDisabled = frameColor;
@@ -748,11 +805,6 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    /**
-     * Set text color.
-     *
-     * @param color integer color number
-     */
     public void setTextColorNormal(int color) {
         textColorNormal = color;
         textColorArray[COLOR_INDEX_NORMAL] = color;
@@ -775,9 +827,9 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     }
 
     /**
-     * Set text color.
+     * Set one color for all text state.
      *
-     * @param color integer color number
+     * @param color new text color
      */
     public void setTextColor(int color) {
         textColorNormal = color;
@@ -805,6 +857,12 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         textView.setTextSize(size);
     }
 
+    /**
+     * Set text container weight and padding
+     *
+     * @param weight
+     * @param padding
+     */
     public void setTextParams(int weight, int[] padding) {
         this.textWeight = weight;
         this.textPaddingArray = padding;
@@ -865,6 +923,22 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setImage(position, drawable, drawable, drawable, scaleType, weight, padding);
     }
 
+    /**
+     * Set one color for all image state.
+     *
+     * @param color new image color
+     */
+    public void setImageColor(int color) {
+        setImageColors(color, color, color);
+    }
+
+    /**
+     * Set colors to each state.
+     *
+     * @param normal   color for normal state
+     * @param pressed  color for pressed state
+     * @param disabled color for disabled state
+     */
     public void setImageColors(int normal, int pressed, int disabled) {
         this.drawableColorNormal = normal;
         this.drawableColorPressed = pressed;
@@ -874,6 +948,15 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         setContent();
     }
 
+    /**
+     * Set image color from color state list.
+     * Only three states are use: disabled, pressed, normal.
+     *
+     * @param colorStateList is a image color state list. Should have three states:
+     *                       enabled - for normal state,
+     *                       pressed - for pressed state,
+     *                       (empty) - for disabled state.
+     */
     public void setImageColors(ColorStateList colorStateList) {
         imageColorStateListToIntegers(colorStateList);
         setImageColorStateList();
@@ -1074,11 +1157,35 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         return drawableColorNormal;
     }
 
+    public int getPrimaryColorLight() {
+        return primaryColorLight;
+    }
+
+    public int getSecondaryColorLight() {
+        return secondaryColorLight;
+    }
+
     public int getImageColorDisabled() {
         return drawableColorDisabled;
     }
 
     public int getImageColorPressed() {
+        return drawableColorPressed;
+    }
+
+    public int getFrameColorNormal() {
+        return frameColorNormal;
+    }
+
+    public int getDrawableColorNormal() {
+        return drawableColorNormal;
+    }
+
+    public int getDrawableColorDisabled() {
+        return drawableColorDisabled;
+    }
+
+    public int getDrawableColorPressed() {
         return drawableColorPressed;
     }
 }

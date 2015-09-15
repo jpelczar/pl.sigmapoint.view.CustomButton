@@ -92,7 +92,6 @@ public class CreateFragment extends Fragment implements View.OnClickListener {
         enableTB = (ToggleButton) view.findViewById(R.id.enable);
 
         enableTB.setChecked(true);
-        generateCB.setImageColors(Color.CYAN, Color.GREEN, Color.MAGENTA);
 
         array = new String[4];
         array[CustomButton.LEFT] = "Left";
