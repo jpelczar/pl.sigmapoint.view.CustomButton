@@ -208,11 +208,8 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                 textColorDisabled = textColorNormal;
             }
 
-            if (drawableNormal != null) { //if only normal image is specified
-                if (drawablePressed == null)
-                    drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
-                if (drawableDisabled == null)
-                    drawableDisabled = drawableNormal.getConstantState().newDrawable().mutate();
+            if (drawableNormal != null && drawablePosition == -1) {
+                drawablePosition = LEFT;
             }
 
             if (drawableColorStateListAttr != null)
@@ -314,42 +311,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
             if (drawableDisabled == null)
                 drawablePressed = drawableNormal.getConstantState().newDrawable().mutate();
 
-            StateListDrawable listDrawable = new StateListDrawable();
-            listDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
-            listDrawable.addState(new int[]{android.R.attr.state_enabled}, drawableNormal);
-            listDrawable.addState(new int[]{}, drawableDisabled);
-
-            if (imagePaddingArray != null)
-                imageContainer.setPadding(imagePaddingArray[LEFT], imagePaddingArray[TOP], imagePaddingArray[RIGHT], imagePaddingArray[BOTTOM]);
-            imageContainer.setScaleType(imageScaleType);
-
-            imageContainer.setImageDrawable(listDrawable);
-
-            switch (drawablePosition) {
-                case LEFT:
-                    container.setOrientation(HORIZONTAL);
-                    container.addView(imageContainer);
-                    break;
-                case RIGHT:
-                    container.setOrientation(HORIZONTAL);
-                    break;
-                case TOP:
-                    container.addView(imageContainer);
-                    break;
-            }
-            if (text != null) {
-                textView.setGravity(Gravity.CENTER);
-                container.addView(textView);
-            }
-
-            switch (drawablePosition) {
-                case RIGHT:
-                    container.addView(imageContainer);
-                    break;
-                case BOTTOM:
-                    container.addView(imageContainer);
-                    break;
-            }
+            updateContent();
 
         } else {
             layoutParamsText = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -363,6 +325,47 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         addView(container);
 
         updateText();
+    }
+
+    private void updateContent() {
+        container.removeAllViews();
+
+        StateListDrawable listDrawable = new StateListDrawable();
+        listDrawable.addState(new int[]{android.R.attr.state_pressed}, drawablePressed);
+        listDrawable.addState(new int[]{android.R.attr.state_enabled}, drawableNormal);
+        listDrawable.addState(new int[]{}, drawableDisabled);
+
+        if (imagePaddingArray != null)
+            imageContainer.setPadding(imagePaddingArray[LEFT], imagePaddingArray[TOP], imagePaddingArray[RIGHT], imagePaddingArray[BOTTOM]);
+        imageContainer.setScaleType(imageScaleType);
+
+        imageContainer.setImageDrawable(listDrawable);
+
+        switch (drawablePosition) {
+            case LEFT:
+                container.setOrientation(HORIZONTAL);
+                container.addView(imageContainer);
+                break;
+            case RIGHT:
+                container.setOrientation(HORIZONTAL);
+                break;
+            case TOP:
+                container.addView(imageContainer);
+                break;
+        }
+        if (text != null) {
+            textView.setGravity(Gravity.CENTER);
+            container.addView(textView);
+        }
+
+        switch (drawablePosition) {
+            case RIGHT:
+                container.addView(imageContainer);
+                break;
+            case BOTTOM:
+                container.addView(imageContainer);
+                break;
+        }
     }
 
     /**
@@ -565,15 +568,15 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
                         scale = ((float) container.getHeight()) / ((float) drawableNormal.getIntrinsicHeight());
                         layoutParams.width = (int) (scale * drawableNormal.getIntrinsicWidth());
                         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        if (layoutParams.width > container.getWidth() / 2) {
-                            layoutParams.width = 0;
-                            layoutParams.weight = 1;
-                            imageWeight = 1;
-                        } else {
+                        if (layoutParams.width + textView.getPaint().measureText(textView.getText().toString()) < container.getWidth() / 2) {
                             if (drawablePosition == LEFT)
                                 ((LayoutParams) textView.getLayoutParams()).rightMargin = layoutParams.width;
                             else
                                 ((LayoutParams) textView.getLayoutParams()).leftMargin = layoutParams.width;
+                        } else if (layoutParams.width > container.getWidth() / 2) {
+                            layoutParams.width = 0;
+                            layoutParams.weight = 1;
+                            imageWeight = 1;
                         }
                         if (text == null) {
                             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -945,7 +948,7 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         this.drawableColorDisabled = disabled;
 
         setImageColorStateList();
-        setContent();
+        updateContent();
     }
 
     /**
@@ -960,25 +963,25 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
     public void setImageColors(ColorStateList colorStateList) {
         imageColorStateListToIntegers(colorStateList);
         setImageColorStateList();
-        setContent();
+        updateContent();
     }
 
     public void setImageNormalColor(int color) {
         this.drawableColorNormal = color;
         setImageColorStateList();
-        setContent();
+        updateContent();
     }
 
     public void setImagePressedColor(int color) {
         this.drawableColorPressed = color;
         setImageColorStateList();
-        setContent();
+        updateContent();
     }
 
     public void setImageDisableColor(int color) {
         this.drawableColorDisabled = color;
         setImageColorStateList();
-        setContent();
+        updateContent();
     }
 
     /**
