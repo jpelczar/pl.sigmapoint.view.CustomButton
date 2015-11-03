@@ -83,12 +83,8 @@
             android:layout_weight="1"
             android:paddingRight="2dp"
             android:text="Create own button"
-            app:cb_background="#f1c8c2"
-            app:cb_frame_color="#DBBA23"
-            app:cb_frame_color_disabled="#CFB957"
-            app:cb_frame_color_pressed="#A88D13"
             app:cb_frame_size="5dp"
-            app:cb_primary_color="#DB433B"
+            app:cb_primary_color="#2141AA"
             app:cb_secondary_color="#E01E14"
             app:cb_shape_radius="5dp" />
 
@@ -104,7 +100,7 @@
             app:cb_image_color_disabled="#ffffff"
             app:cb_image_color_normal="#e01e14"
             app:cb_image_color_pressed="#ffffff"
-            app:cb_image_padding_top="6dp"
+            app:cb_image_padding_top="15dp"
             app:cb_image_position="top"
             app:cb_primary_color="#FFFFFF"
             app:cb_secondary_color="#E01E14"
