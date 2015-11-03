@@ -17,7 +17,7 @@ Then select library folder from project. And start use. </p>
 
 Example: 
 
-![](https://github.com/Sigmapoint/pl.sigmapoint.view.CustomButton/blob/develop/resources/screen.png)
+![](https://github.com/Sigmapoint/pl.sigmapoint.view.CustomButton/blob/develop/resources/screen_2.png)
 
 For creating facebook button you must only do this:
 ```xml
