@@ -231,7 +231,7 @@ public class CreateFragment extends Fragment implements View.OnClickListener {
 
         if (btTextET.getText().length() > 0) generatedCB.setText(btTextET.getText().toString());
         if (cornerRadiusET.getText().length() > 0)
-            generatedCB.setShapeBackground(GradientDrawable.RECTANGLE, Integer.parseInt(cornerRadiusET.getText().toString()));
+            generatedCB.setBackground(GradientDrawable.RECTANGLE, Integer.parseInt(cornerRadiusET.getText().toString()));
         if (frameSizeET.getText().length() > 0)
             generatedCB.setFrameSize(Float.parseFloat(frameSizeET.getText().toString()));
         if (iconTB.isChecked()) {
