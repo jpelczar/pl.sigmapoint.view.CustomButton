@@ -70,7 +70,7 @@ cb_text_padding_top - {format - dimension}
 cb_text_padding_right - {format - dimension} 
 cb_text_padding_bottom - {format - dimension} 
 cb_text_weight - {format - integer}
-cb_text_center or android:textAlignment - only works when image weight doesn't specify. Center text in button. {format - boolean or only "center" value} 
+cb_text_center or android:textAlignment - only works when image weight doesnt specify. Center text in button. {format - boolean or only "center" value} 
 
 cb_shape_radius - corner radius {format - dimension}
 cb_shape_type - shape type, you can choose: rect or oval 
