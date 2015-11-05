@@ -52,7 +52,7 @@ This is the base tag of CustomButton:
      android:text="text"/>
 ```
 You can specify the following things: 
-```java
+```
 cb_primary_color - you can specify only two colors for all button. This color was set to bacground state normal,
 frame and text sate pressed. But it will be override by background, text, frame color. {format - color}
 cb_secondary_color - you can specify only two colors for all button. This color was set to bacground state pressed, frame and text state normal. But it will be override by background, text, frame color. {format - color}
@@ -70,7 +70,7 @@ cb_text_padding_top - {format - dimension}
 cb_text_padding_right - {format - dimension} 
 cb_text_padding_bottom - {format - dimension} 
 cb_text_weight - {format - integer}
-cb_text_center or android:textAlignment - only works when image weight doesnt specify. Center text in button. {format - boolean or only "center" value} 
+cb_text_center or android:textAlignment - only works when image weight doesn't specify. Center text in button. {format - boolean or only "center" value} 
 
 cb_shape_radius - corner radius {format - dimension}
 cb_shape_type - shape type, you can choose: rect or oval 
