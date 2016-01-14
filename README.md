@@ -146,7 +146,7 @@ LEFT, TOP, RIGHT, BOTTOM - for image position
 If you add image to the button, set frame and want to center text without respect frame size you should set text padding same as frame size.
 
 ## Dependencies
-In demo application  [Ambil Warna](https://github.com/yukuku/ambilwarna) Library was used.
+In demo application  [Ambil Warna](https://github.com/yukuku/ambilwarna) Library was use.
 
 ##License
 
