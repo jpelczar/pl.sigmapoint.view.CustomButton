@@ -271,6 +271,16 @@ public class CustomButton extends LinearLayout implements View.OnClickListener {
         imageContainer.setEnabled(enabled);
     }
 
+    @Override
+    public int getMinimumHeight() {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getContext().getResources().getDisplayMetrics());
+    }
+
+    @Override
+    protected int getSuggestedMinimumHeight() {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getContext().getResources().getDisplayMetrics());
+    }
+
     private void setContent() {
         removeAllViews();
         container.removeAllViews();

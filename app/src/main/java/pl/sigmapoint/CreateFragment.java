@@ -245,6 +245,8 @@ public class CreateFragment extends Fragment implements View.OnClickListener {
             generatedCB.setImage(position, getResources().getDrawable(R.drawable.ic_owl), ImageView.ScaleType.FIT_CENTER, 0, null);
         }
         generatedCB.setElevationEnabled(elevationTB.isChecked());
+        generatedCB.setImageColors(frameColorNormalCB.getFrameColorNormal(), frameColorPressedCB.getFrameColorPressed(), frameColorDisabledCB.getFrameColorDisabled());
+
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).createdButton = generatedCB;
             ((MainActivity) getActivity()).startGenerated();
