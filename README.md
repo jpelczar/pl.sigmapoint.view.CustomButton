@@ -51,6 +51,7 @@ This is the base tag of CustomButton:
      android:layout_height="match_parent"
      android:text="text"/>
 ```
+
 You can specify the following things: 
 ```
 cb_primary_color - you can specify only two colors for all button. This color was set to bacground state normal,
@@ -99,8 +100,8 @@ cb_image_padding_bottom - {format - dimension}
 cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start, fit_end, fit_xy}
 cb_image_weight - {format - integer}
 ```
-<h3> Java Code </h3>
-```
+### Java Code
+```java
 CustomButton(Context context, LayoutParams layoutParams, int primaryColor, int secondaryColor, Drawable icon)
 setPrimaryColor(int color)
 setSecondaryColor(int color)
