@@ -100,7 +100,7 @@ cb_image_scale_type - {center, center_inside, center_crop, fit_center, fit_start
 cb_image_weight - {format - integer}
 ```
 <h3> Java Code </h3>
-```java
+```
 CustomButton(Context context, LayoutParams layoutParams, int primaryColor, int secondaryColor, Drawable icon)
 setPrimaryColor(int color)
 setSecondaryColor(int color)
